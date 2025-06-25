@@ -11,5 +11,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TecHubApplication {
     //这是一个入口类
-
+    //再次测试
 }
