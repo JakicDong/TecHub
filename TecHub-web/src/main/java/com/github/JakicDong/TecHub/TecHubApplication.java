@@ -42,7 +42,6 @@ public class TecHubApplication implements WebMvcConfigurer , ApplicationRunner {
      *
      * @return
      */
-
     @Bean
     @ConditionalOnExpression(value = "#{'dev'.equals(environment.getProperty('env.name'))}")
     public TomcatConnectorCustomizer customServerPortTomcatConnectorCustomizer() {
