@@ -30,6 +30,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ServletComponentScan // 扫描servlet组件
 @SpringBootApplication // 启动类
 public class TecHubApplication implements WebMvcConfigurer , ApplicationRunner {
+    //
     @Value("${server.port:8080}")
     private Integer webPort;
 
