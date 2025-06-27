@@ -1,0 +1,27 @@
+server:
+  port: 8081
+  servlet:
+    session:
+      timeout: 5m # 设置session的有效期为五分钟
+  compression:
+    enabled: true # 开启返回结果压缩，减少传输耗时
+    min-response-size: 2KB
+
+
+spring:
+  profiles:
+    active: dev
+  config:
+    import: application-dal.yml,application-config.yml,application-web.yml
+
+  liquibase:
+    change-log: classpath:liquibase/master.xml
+    enabled: true # 当实际使用的数据库不支持liquibase，如 mariadb 时，将这个参数设置为false
+    clear-checksums: true # 每次启动时清除数据库中的checksums，用于开发环境
+
+
+# 默认的数据库名
+database:
+  name: tec_hub
+
+

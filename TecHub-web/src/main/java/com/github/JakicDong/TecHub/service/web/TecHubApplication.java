@@ -1,9 +1,9 @@
-package com.github.JakicDong.TecHub;
+package com.github.JakicDong.TecHub.service.web;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.JakicDong.TecHub.config.GlobalViewConfig;
+import com.github.JakicDong.TecHub.service.web.config.GlobalViewConfig;
 import com.github.JakicDong.TecHub.core.util.SocketUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
@@ -30,12 +31,35 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ServletComponentScan // 扫描servlet组件
 @SpringBootApplication // 启动类
 public class TecHubApplication implements WebMvcConfigurer , ApplicationRunner {
-    //
+
     @Value("${server.port:8080}")
     private Integer webPort;
 
+    //注入全局的配置信息
+//    @Resource
+//    private GlobalViewInterceptor globalViewInterceptor;
+
+//    @Resource
+//    private AsyncHandlerInterceptor onlineUserStatisticInterceptor;
+
+
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(globalViewInterceptor).addPathPatterns("/**");
+//        registry.addInterceptor(onlineUserStatisticInterceptor).addPathPatterns("/**").excludePathPatterns("/test/**").excludePathPatterns("/subscribe");
+//    }
+
+
     public static void main(String[] args) {
         SpringApplication.run(TecHubApplication.class, args);
+    }
+
+    // 跨域设置
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        //项目中的所有接口都支持跨域
+        registry.addMapping("/**")
+                .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE");
     }
 
     /**
