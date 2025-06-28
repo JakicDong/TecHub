@@ -4,9 +4,12 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+
 /**
- * @author XuYifei
- * @date 2024-07-12
+ * @author JakicDong
+ * @time 2025.6.28
+ * @description service模块的自动配置类
+ * @version 1.0.0
  */
 @Configuration
 @ComponentScan("com.github.JakicDong.TecHub.service")
