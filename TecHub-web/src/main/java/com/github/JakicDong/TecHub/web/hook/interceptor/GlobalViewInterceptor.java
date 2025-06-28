@@ -21,5 +21,7 @@ public class GlobalViewInterceptor {
     @Autowired
     private GlobalInitService globalInitService;
 
+
+
 }
 

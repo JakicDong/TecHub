@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 public class GlobalInitService {
     @Value("${env.name}")
     private String env;
-//    @Autowired
-//    private UserService userService;
+    @Autowired
+    private UserService userService;
 
 //    @Resource
 //    private GlobalViewConfig globalViewConfig;

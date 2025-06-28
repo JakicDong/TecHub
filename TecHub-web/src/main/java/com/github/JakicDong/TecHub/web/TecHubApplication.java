@@ -31,10 +31,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Slf4j // 日志注解
 @ServletComponentScan // 扫描servlet组件
-//@SpringBootApplication // 启动类
-@SpringBootApplication(scanBasePackages = {"com.github.JakicDong.TecHub.web"
-        , "com.github.JakicDong.TecHub.service"
-        , "com.github.JakicDong.TecHub.core"})
+@SpringBootApplication // 启动类
+//@SpringBootApplication(scanBasePackages = {"com.github.JakicDong.TecHub.web"
+//        , "com.github.JakicDong.TecHub.service"
+//        , "com.github.JakicDong.TecHub.core"})
 
 public class TecHubApplication implements WebMvcConfigurer , ApplicationRunner {
 
@@ -42,8 +42,8 @@ public class TecHubApplication implements WebMvcConfigurer , ApplicationRunner {
     private Integer webPort;
 
     //注入全局的配置信息
-//    @Resource
-//    private GlobalViewInterceptor globalViewInterceptor;
+    @Resource
+    private GlobalViewInterceptor globalViewInterceptor;
 
 //    @Resource
 //    private AsyncHandlerInterceptor onlineUserStatisticInterceptor;
