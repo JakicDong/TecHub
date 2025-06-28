@@ -1,4 +1,4 @@
-package com.github.JakicDong.TecHub.service.web.config;
+package com.github.JakicDong.TecHub.web.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

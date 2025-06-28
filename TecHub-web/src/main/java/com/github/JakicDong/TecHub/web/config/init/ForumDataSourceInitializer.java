@@ -1,4 +1,4 @@
-package com.github.JakicDong.TecHub.service.web.config.init;
+package com.github.JakicDong.TecHub.web.config.init;
 
 
 import com.github.JakicDong.TecHub.core.util.SpringUtil;
@@ -95,7 +95,7 @@ public class ForumDataSourceInitializer {
 //        if (Objects.equals(record.get(0).get("MD5SUM"), "8:a1a2d9943b746acf58476ae612c292fc")) {
 //            jdbcTemplate.update("update DATABASECHANGELOG set MD5SUM='8:bb81b67a5219be64eff22e2929fed540' where ID='00000000000020'");
 //            log.info("可以进来,记录的准确");
-//        }
+//        }ddww'qw
 
         return false;
     }

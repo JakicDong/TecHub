@@ -1,7 +1,7 @@
-package com.github.JakicDong.TecHub.service.web.hook.interceptor;
+package com.github.JakicDong.TecHub.web.hook.interceptor;
 
 
-import com.github.JakicDong.TecHub.service.web.global.GlobalInitService;
+import com.github.JakicDong.TecHub.web.global.GlobalInitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -22,3 +22,4 @@ public class GlobalViewInterceptor {
     private GlobalInitService globalInitService;
 
 }
+

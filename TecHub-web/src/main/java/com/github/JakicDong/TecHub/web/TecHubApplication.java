@@ -1,10 +1,12 @@
-package com.github.JakicDong.TecHub.service.web;
+package com.github.JakicDong.TecHub.web;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.JakicDong.TecHub.service.web.config.GlobalViewConfig;
+import com.github.JakicDong.TecHub.web.config.GlobalViewConfig;
 import com.github.JakicDong.TecHub.core.util.SocketUtil;
+import com.github.JakicDong.TecHub.web.hook.interceptor.GlobalViewInterceptor;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;

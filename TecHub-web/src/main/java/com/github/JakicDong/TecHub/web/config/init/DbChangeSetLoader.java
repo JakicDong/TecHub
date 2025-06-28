@@ -1,4 +1,4 @@
-package com.github.JakicDong.TecHub.config.init;
+package com.github.JakicDong.TecHub.web.config.init;
 
 
 import org.springframework.core.io.ClassPathResource;
