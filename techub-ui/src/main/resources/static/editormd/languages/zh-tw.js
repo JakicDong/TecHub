@@ -1,3 +1,4 @@
+
 (function(){
     var factory = function (exports) {
         var lang = {
