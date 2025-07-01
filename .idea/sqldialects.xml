@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_data_221209.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_data_221210.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_data_221216.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_data_230103.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_data_230105.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_data_230130.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_data_230415.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_data_230629.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_data_230821.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_data_231113.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_data_250224.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_schema_221209.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/init_schema_230414.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/update_schema_221223.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/update_schema_221229.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/update_schema_230103.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/update_schema_230131.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/update_schema_230626.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/update_schema_230628.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/update_schema_230820.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/update_schema_231018.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/update_schema_241029.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/update_schema_241204.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/update_schema_250207.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/techub-web/src/main/resources/liquibase/data/update_schema_250213.sql" dialect="MySQL" />
+  </component>
+</project>
