@@ -3,6 +3,7 @@ package com.github.jakicdong.techub.web;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.jakicdong.techub.core.util.SocketUtil;
 import com.github.jakicdong.techub.web.config.GlobalViewConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 * @time 2025/7/1 19:25
 */
 @Slf4j
-//@EnableAsync
+@EnableAsync
 //@EnableScheduling
 //@EnableCaching
 @ServletComponentScan
@@ -34,6 +35,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class TecHubApplication implements WebMvcConfigurer, ApplicationRunner {
     @Value("${server.port:8080}")
     private Integer webPort;
+
+
 
     /**
      * 解决swagger-ui访问 /doc.html 404问题
@@ -50,22 +53,23 @@ public class TecHubApplication implements WebMvcConfigurer, ApplicationRunner {
     }
 
 
-//    /**
-//     * 兼容本地启动时8080端口被占用的场景; 只有dev启动方式才做这个逻辑
-//     *
-//     * @return
-//     */
-//    @Bean
-//    @ConditionalOnExpression(value = "#{'dev'.equals(environment.getProperty('env.name'))}")
-//    public TomcatConnectorCustomizer customServerPortTomcatConnectorCustomizer() {
-//        // 开发环境时，首先判断8080d端口是否可用；若可用则直接使用，否则选择一个可用的端口号启动
-//        int port = SocketUtil.findAvailableTcpPort(8000, 10000, webPort);
-//        if (port != webPort) {
-//            log.info("默认端口号{}被占用，随机启用新端口号: {}", webPort, port);
-//            webPort = port;
-//        }
-//        return connector -> connector.setPort(port);
-//    }
+
+    /**
+     * 兼容本地启动时8080端口被占用的场景; 只有dev启动方式才做这个逻辑
+     *
+     * @return
+     */
+    @Bean
+    @ConditionalOnExpression(value = "#{'dev'.equals(environment.getProperty('env.name'))}")
+    public TomcatConnectorCustomizer customServerPortTomcatConnectorCustomizer() {
+        // 开发环境时，首先判断8080d端口是否可用；若可用则直接使用，否则选择一个可用的端口号启动
+        int port = SocketUtil.findAvailableTcpPort(8000, 10000, webPort);
+        if (port != webPort) {
+            log.info("默认端口号{}被占用，随机启用新端口号: {}", webPort, port);
+            webPort = port;
+        }
+        return connector -> connector.setPort(port);
+    }
 
     @Override
     public void run(ApplicationArguments args) {

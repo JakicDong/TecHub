@@ -1,0 +1,7 @@
+net:
+  proxy:
+    # 代理相关信息
+    - ip: 127.0.0.1
+      port: 1080
+      type: SOCKS
+
