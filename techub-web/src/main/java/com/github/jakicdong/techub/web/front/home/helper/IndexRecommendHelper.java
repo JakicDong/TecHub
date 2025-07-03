@@ -35,8 +35,8 @@ public class IndexRecommendHelper {
 //    private ConfigService configService;
 
 //
-//    public IndexVo buildIndexVo(String activeTab) {
-//        IndexVo vo = new IndexVo();
+    public IndexVo buildIndexVo(String activeTab) {
+        IndexVo vo = new IndexVo();
 //        CategoryDTO category = categories(activeTab, vo);
 //        vo.setCategoryId(category.getCategoryId());
 //        vo.setCurrentCategory(category.getCategory());
@@ -49,8 +49,8 @@ public class IndexRecommendHelper {
 //                .async(() -> vo.setUser(loginInfo()), "用户信息")
 //                .allExecuted()
 //                .prettyPrint();
-//        return vo;
-//    }
+        return vo;
+    }
 
 //    /**
 //     * 返回分类列表
