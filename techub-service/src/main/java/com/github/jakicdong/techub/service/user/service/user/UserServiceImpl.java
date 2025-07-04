@@ -7,14 +7,19 @@ import com.github.jakicdong.techub.api.model.vo.constants.StatusEnum;
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserStatisticInfoDTO;
+import com.github.jakicdong.techub.core.util.IpUtil;
 import com.github.jakicdong.techub.service.article.repository.dao.ArticleDao;
 import com.github.jakicdong.techub.service.statistics.service.CountService;
 import com.github.jakicdong.techub.service.user.converter.UserConverter;
+import com.github.jakicdong.techub.service.user.repository.dao.UserAiDao;
 import com.github.jakicdong.techub.service.user.repository.dao.UserDao;
 import com.github.jakicdong.techub.service.user.repository.dao.UserRelationDao;
+import com.github.jakicdong.techub.service.user.repository.entity.IpInfo;
+import com.github.jakicdong.techub.service.user.repository.entity.UserAiDO;
 import com.github.jakicdong.techub.service.user.repository.entity.UserInfoDO;
 import com.github.jakicdong.techub.service.user.repository.entity.UserRelationDO;
 import com.github.jakicdong.techub.service.user.service.UserService;
+import com.github.jakicdong.techub.service.user.service.help.UserSessionHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +29,7 @@ import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,9 +37,11 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserDao userDao;
 
-//    @Resource
-//    private UserAiDao userAiDao;
-//
+    @Resource
+    private UserAiDao userAiDao;
+
+    @Autowired
+    private UserSessionHelper userSessionHelper;
     @Resource
     private UserRelationDao userRelationDao;
 
@@ -107,6 +115,41 @@ public class UserServiceImpl implements UserService {
         List<YearArticleDTO> yearArticleDTOS = articleDao.listYearArticleByUserId(userId);
         userHomeDTO.setYearArticleList(yearArticleDTOS);
         return userHomeDTO;
+    }
+
+    @Override
+    public BaseUserInfoDTO getAndUpdateUserIpInfoBySessionId(String session, String clientIp) {
+        if (StringUtils.isBlank(session)) {
+            return null;
+        }
+
+        Long userId = userSessionHelper.getUserIdBySession(session);
+        if (userId == null) {
+            return null;
+        }
+
+        // 查询用户信息，并更新最后一次使用的ip
+        UserInfoDO user = userDao.getByUserId(userId);
+        if (user == null) {
+            // 常见于：session中记录的用户被删除了，直接移除缓存中的session，走重新登录流程
+            userSessionHelper.removeSession(session);
+            return null;
+        }
+
+        IpInfo ip = user.getIp();
+        if (clientIp != null && !Objects.equals(ip.getLatestIp(), clientIp)) {
+            // ip不同，需要更新
+            ip.setLatestIp(clientIp);
+            ip.setLatestRegion(IpUtil.getLocationByIp(clientIp).toRegionStr());
+
+            if (ip.getFirstIp() == null) {
+                ip.setFirstIp(clientIp);
+                ip.setFirstRegion(ip.getLatestRegion());
+            }
+            userDao.updateById(user);
+        }
+        UserAiDO userAiDO = userAiDao.getByUserId(userId);
+        return UserConverter.toDTO(user, userAiDO);
     }
 
 }

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /*
 * @author JakicDong
@@ -103,5 +104,146 @@ public class RedisClient {
         }
         return result;
     }
+
+    public static <T> T hGet(String key, String field, Class<T> clz) {
+        return template.execute((RedisCallback<T>) con -> {
+            byte[] records = con.hGet(keyBytes(key), valBytes(field));
+            if (records == null) {
+                return null;
+            }
+            return toObj(records, clz);
+        });
+    }
+
+    /**
+     * techub的缓存值序列化处理
+     *
+     * @param val
+     * @param <T>
+     * @return
+     */
+    public static <T> byte[] valBytes(T val) {
+
+        if (val instanceof String) {
+            return ((String) val).getBytes(CODE);
+        } else {
+            return JsonUtil.toStr(val).getBytes(CODE);
+        }
+    }
+
+    public static <T> Boolean hSet(String key, String field, T ans) {
+        return template.execute(new RedisCallback<Boolean>() {
+            @Override
+            public Boolean doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                return redisConnection.hSet(keyBytes(key), valBytes(field), valBytes(ans));
+            }
+        });
+    }
+
+    /**
+     * 设置缓存有效期
+     *
+     * @param key
+     * @param expire 有效期，s为单位
+     */
+    public static void expire(String key, Long expire) {
+        template.execute((RedisCallback<Void>) connection -> {
+            connection.expire(keyBytes(key), expire);
+            return null;
+        });
+    }
+
+    /**
+     * 分数更新
+     *
+     * @param key
+     * @param value
+     * @param score
+     * @return
+     */
+    public static Double zIncrBy(String key, String value, Integer score) {
+        return template.execute(new RedisCallback<Double>() {
+            @Override
+            public Double doInRedis(RedisConnection connection) throws DataAccessException {
+                return connection.zIncrBy(keyBytes(key), score, valBytes(value));
+            }
+        });
+    }
+
+    /**
+     * 返回key的有效期
+     *
+     * @param key
+     * @return
+     */
+    public static Long ttl(String key) {
+        return template.execute((RedisCallback<Long>) con -> con.ttl(keyBytes(key)));
+    }
+
+    public static <T> Boolean hDel(String key, String field) {
+        return template.execute(new RedisCallback<Boolean>() {
+            @Override
+            public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
+                return connection.hDel(keyBytes(key), valBytes(field)) > 0;
+            }
+        });
+    }
+
+    /**
+     * 带过期时间的缓存写入
+     *
+     * @param key
+     * @param value
+     * @param expire s为单位
+     * @return
+     */
+    public static Boolean setStrWithExpire(String key, String value, Long expire) {
+        return template.execute(new RedisCallback<Boolean>() {
+            @Override
+            public Boolean doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                return redisConnection.setEx(keyBytes(key), expire, valBytes(value));
+            }
+        });
+    }
+
+
+    /**
+     * 删除缓存
+     *
+     * @param key
+     */
+    public static void del(String key) {
+        template.execute((RedisCallback<Long>) con -> con.del(keyBytes(key)));
+    }
+
+    /**
+     * 查询缓存
+     *
+     * @param key
+     * @return
+     */
+    public static String getStr(String key) {
+        return template.execute((RedisCallback<String>) con -> {
+            byte[] val = con.get(keyBytes(key));
+            return val == null ? null : new String(val);
+        });
+    }
+
+    public static <T> Map<String, T> hMGet(String key, final List<String> fields, Class<T> clz) {
+        return template.execute(new RedisCallback<Map<String, T>>() {
+            @Override
+            public Map<String, T> doInRedis(RedisConnection connection) throws DataAccessException {
+                byte[][] f = new byte[fields.size()][];
+                IntStream.range(0, fields.size()).forEach(i -> f[i] = valBytes(fields.get(i)));
+                List<byte[]> ans = connection.hMGet(keyBytes(key), f);
+                Map<String, T> result = Maps.newHashMapWithExpectedSize(fields.size());
+                IntStream.range(0, fields.size()).forEach(i -> {
+                    result.put(fields.get(i), toObj(ans.get(i), clz));
+                });
+                return result;
+            }
+        });
+    }
+
 
 }
