@@ -2,6 +2,7 @@ package com.github.jakicdong.techub.api.model.vo.user.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
 * @time 2025/7/3 14:35
 */
 @Data
+@Accessors(chain = true)
 public class SimpleUserInfoDTO implements Serializable {
     private static final long serialVersionUID = 4802653694786272120L;
 

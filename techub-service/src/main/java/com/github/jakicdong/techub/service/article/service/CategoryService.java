@@ -11,6 +11,14 @@ import java.util.List;
 */
 public interface CategoryService {
 
+    /**
+     * 查询类目名
+     *
+     * @param categoryId
+     * @return
+     */
+    String queryCategoryName(Long categoryId);
+
 
     /**
      * 查询所有的分离

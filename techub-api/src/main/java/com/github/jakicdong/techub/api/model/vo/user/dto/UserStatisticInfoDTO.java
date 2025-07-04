@@ -14,7 +14,7 @@ import java.util.Map;
 */
 @Data
 @ToString(callSuper = true)
-public class UserStatisticInfoDTO {
+public class UserStatisticInfoDTO extends BaseUserInfoDTO {
     /**
      * 关注数
      */
