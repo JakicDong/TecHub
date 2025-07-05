@@ -32,6 +32,11 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/*
+* @author JakicDong
+* @description 全局拦截器，用于拦截所有的请求.
+* @time 2025/7/5 15:51
+*/
 @Slf4j
 @Component
 public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
@@ -40,9 +45,12 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        //判断当前请求是不是映射到了具体的Controller方法上
         if (handler instanceof HandlerMethod) {
             //权限注解获取
             HandlerMethod handlerMethod = (HandlerMethod) handler;
+           //先看方法上有没有权限注解，没有再看类上有没有权限注解
             Permission permission = handlerMethod.getMethod().getAnnotation(Permission.class);
             if (permission == null) {
                 permission = handlerMethod.getBeanType().getAnnotation(Permission.class);
@@ -80,7 +88,14 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
         }
         return true;
     }
-
+    //在请求处理之,渲染视图之前执行
+    /*
+     * 参数说明：
+     *  1. request：当前请求对象
+     *  2. response：当前响应对象
+     *  3. handler：当前请求的处理器方法对象
+     *  4. modelAndView：封装了视图和模型数据的对象
+     */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         if (!ObjectUtils.isEmpty(modelAndView)) {

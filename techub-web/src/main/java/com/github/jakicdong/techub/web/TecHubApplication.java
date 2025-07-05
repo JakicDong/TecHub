@@ -40,9 +40,11 @@ public class TecHubApplication implements WebMvcConfigurer, ApplicationRunner {
     @Value("${server.port:8080}")
     private Integer webPort;
 
+    //全局视图拦截器
     @Resource
     private GlobalViewInterceptor globalViewInterceptor;
 
+    //注册全局拦截器,拦截所有的请求
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(globalViewInterceptor).addPathPatterns("/**");
