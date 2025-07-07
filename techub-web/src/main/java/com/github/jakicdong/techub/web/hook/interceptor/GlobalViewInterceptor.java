@@ -1,7 +1,5 @@
 package com.github.jakicdong.techub.web.hook.interceptor;
 
-
-
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.github.hui.quick.plugin.qrcode.util.json.JsonUtil;
 import com.github.jakicdong.techub.api.model.context.ReqInfoContext;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,14 +33,18 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @Component
 public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
+    //AsyncHandlerInterceptor 是一个异步的拦截器
     @Autowired
     private GlobalInitService globalInitService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
         //判断当前请求是不是映射到了具体的Controller方法上
         if (handler instanceof HandlerMethod) {
+
+            //打印请求路径
+            log.info(" preHandle 请求路径：{}", request.getRequestURI());
+
             //权限注解获取
             HandlerMethod handlerMethod = (HandlerMethod) handler;
            //先看方法上有没有权限注解，没有再看类上有没有权限注解
@@ -84,6 +85,7 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
         }
         return true;
     }
+
     //在请求处理之,渲染视图之前执行
     /*
      * 参数说明：
@@ -95,12 +97,17 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         if (!ObjectUtils.isEmpty(modelAndView)) {
+            log.info(" postHandle 请求路径：{}", request.getRequestURI());
+            log.info("---------------------------------------------------------");
+
+
             if (response.getStatus() != HttpStatus.OK.value()) {
                 try {
                     ReqInfoContext.ReqInfo reqInfo = new ReqInfoContext.ReqInfo();
                     // fixme 对于异常重定向到 /error 时，会导致登录信息丢失，待解决
                     globalInitService.initLoginUser(reqInfo);
                     ReqInfoContext.addReqInfo(reqInfo);
+                    //添加信息到全局视图当中
                     modelAndView.getModel().put("global", globalInitService.globalAttr());
                 } finally {
                     ReqInfoContext.clear();
@@ -108,6 +115,7 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
             } else {
                 modelAndView.getModel().put("global", globalInitService.globalAttr());
             }
+
         }
 
     }

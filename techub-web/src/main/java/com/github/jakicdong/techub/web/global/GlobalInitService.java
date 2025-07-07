@@ -93,7 +93,9 @@ public class GlobalInitService {
         vo.setSiteStatisticInfo(sitemapService.querySiteVisitInfo(null, null));
         vo.setTodaySiteStatisticInfo(sitemapService.querySiteVisitInfo(LocalDate.now(), null));
 
+        //添加seo 判断seo中的ogp是否为空，为空则使用默认seo
         if (ReqInfoContext.getReqInfo() == null || ReqInfoContext.getReqInfo().getSeo() == null || CollectionUtils.isEmpty(ReqInfoContext.getReqInfo().getSeo().getOgp())) {
+
             Seo seo = seoInjectService.defaultSeo();
             vo.setOgp(seo.getOgp());
             vo.setJsonLd(JSONUtil.toJsonStr(seo.getJsonLd()));
@@ -103,6 +105,7 @@ public class GlobalInitService {
             vo.setJsonLd(JSONUtil.toJsonStr(seo.getJsonLd()));
         }
 
+        //检查登录状态并且设置相应信息到全局VO对象当中
         try {
             if (ReqInfoContext.getReqInfo() != null && NumUtil.upZero(ReqInfoContext.getReqInfo().getUserId())) {
                 vo.setIsLogin(true);
