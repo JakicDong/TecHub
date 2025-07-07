@@ -1,11 +1,6 @@
 package com.github.jakicdong.techub.web.hook.interceptor;
 
-/*
-* @author JakicDong
-* @description 注入全局的配置信息：
-*  thymleaf 站点信息，基本信息，在这里注入
-* @time 2025/7/4 14:09
-*/
+
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.github.hui.quick.plugin.qrcode.util.json.JsonUtil;
@@ -35,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 /*
 * @author JakicDong
 * @description 全局拦截器，用于拦截所有的请求.
+* thymleaf 站点信息，基本信息，在这里注入
 * @time 2025/7/5 15:51
 */
 @Slf4j

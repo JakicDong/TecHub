@@ -58,6 +58,9 @@ public class GlobalViewConfig {
      */
     private String wxLoginUrl;
 
+    /**
+     * 网站域名
+     */
     private String host;
 
     /**
