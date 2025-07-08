@@ -69,6 +69,7 @@ body {
   margin: 0;
 }
 
+
 /*全局的色调往前面放*/
 ul {
   margin: 0;
@@ -826,6 +827,7 @@ button:focus {
   font-weight: 700;
 }
 
+.search-no-result p {
 .search-no-result p {
   line-height: 2.6rem;
 }
