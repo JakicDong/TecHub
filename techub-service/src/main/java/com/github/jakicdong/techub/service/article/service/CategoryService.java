@@ -21,7 +21,7 @@ public interface CategoryService {
 
 
     /**
-     * 查询所有的分离
+     * 查询所有的分类
      *
      * @return
      */

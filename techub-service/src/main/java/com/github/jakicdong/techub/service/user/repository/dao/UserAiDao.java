@@ -27,4 +27,33 @@ public class UserAiDao extends ServiceImpl<UserAiMapper, UserAiDO> {
         return userAiMapper.selectOne(queryUserAi);
     }
 
+    /**
+     * 根据星球编号反查用户
+     *
+     * @param starNumber
+     * @return
+     */
+    public UserAiDO getByStarNumber(String starNumber) {
+        LambdaQueryWrapper<UserAiDO> queryUserAi = Wrappers.lambdaQuery();
+
+        queryUserAi.eq(UserAiDO::getStarNumber, starNumber)
+                .eq(UserAiDO::getDeleted, YesOrNoEnum.NO.getCode())
+                .last("limit 1");
+        return userAiMapper.selectOne(queryUserAi);
+    }
+
+    /**
+     * 根据邀请码，查找对应的邀请人
+     *
+     * @param inviteCode 邀请码
+     * @return
+     */
+    public UserAiDO getByInviteCode(String inviteCode) {
+        LambdaQueryWrapper<UserAiDO> queryUserAi = Wrappers.lambdaQuery();
+
+        queryUserAi.eq(UserAiDO::getInviteCode, inviteCode)
+                .eq(UserAiDO::getDeleted, YesOrNoEnum.NO.getCode());
+        return userAiMapper.selectOne(queryUserAi);
+    }
+
 }

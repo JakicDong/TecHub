@@ -1,6 +1,7 @@
 package com.github.jakicdong.techub.service.user.service;
 
 
+import com.github.jakicdong.techub.api.model.vo.user.UserPwdLoginReq;
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserStatisticInfoDTO;
@@ -51,6 +52,9 @@ public interface UserService {
      */
     BaseUserInfoDTO getAndUpdateUserIpInfoBySessionId(String session, String clientIp);
 
-
+    /**
+     * 绑定用户信息
+     */
+    void bindUserInfo(UserPwdLoginReq loginReq);
 
 }

@@ -4,6 +4,7 @@ import com.github.jakicdong.techub.api.model.context.ReqInfoContext;
 import com.github.jakicdong.techub.api.model.exception.ExceptionUtil;
 import com.github.jakicdong.techub.api.model.vo.article.dto.YearArticleDTO;
 import com.github.jakicdong.techub.api.model.vo.constants.StatusEnum;
+import com.github.jakicdong.techub.api.model.vo.user.UserPwdLoginReq;
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserStatisticInfoDTO;
@@ -14,15 +15,14 @@ import com.github.jakicdong.techub.service.user.converter.UserConverter;
 import com.github.jakicdong.techub.service.user.repository.dao.UserAiDao;
 import com.github.jakicdong.techub.service.user.repository.dao.UserDao;
 import com.github.jakicdong.techub.service.user.repository.dao.UserRelationDao;
-import com.github.jakicdong.techub.service.user.repository.entity.IpInfo;
-import com.github.jakicdong.techub.service.user.repository.entity.UserAiDO;
-import com.github.jakicdong.techub.service.user.repository.entity.UserInfoDO;
-import com.github.jakicdong.techub.service.user.repository.entity.UserRelationDO;
+import com.github.jakicdong.techub.service.user.repository.entity.*;
 import com.github.jakicdong.techub.service.user.service.UserService;
+import com.github.jakicdong.techub.service.user.service.help.UserPwdEncoder;
 import com.github.jakicdong.techub.service.user.service.help.UserSessionHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -54,9 +54,9 @@ public class UserServiceImpl implements UserService {
 //    @Autowired
 //    private UserSessionHelper userSessionHelper;
 //
-//    @Autowired
-//    private UserPwdEncoder userPwdEncoder;
-//
+    @Autowired
+    private UserPwdEncoder userPwdEncoder;
+
 //    @Autowired
 //    private UserAiService userAiService;
 
@@ -150,6 +150,30 @@ public class UserServiceImpl implements UserService {
         }
         UserAiDO userAiDO = userAiDao.getByUserId(userId);
         return UserConverter.toDTO(user, userAiDO);
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void bindUserInfo(UserPwdLoginReq loginReq) {
+        // 0. 绑定用户名 & 密码 前置校验
+        UserDO user = userDao.getUserByUserName(loginReq.getUsername());
+        if (user == null) {
+            // 用户名不存在，则标识当前登录用户可以使用这个用户名
+            user = new UserDO();
+            user.setId(loginReq.getUserId());
+        } else if (!Objects.equals(loginReq.getUserId(), user.getId())) {
+            // 登录用户名已经存在了
+            throw ExceptionUtil.of(StatusEnum.USER_LOGIN_NAME_REPEAT, loginReq.getUsername());
+        }
+
+        // 1. 更新用户名密码
+        user.setUserName(loginReq.getUsername());
+        user.setPassword(userPwdEncoder.encPwd(loginReq.getPassword()));
+        userDao.saveUser(user);
+
+        // 2. 更新ai相关信息
+        userAiService.initOrUpdateAiInfo(loginReq);
     }
 
 }
