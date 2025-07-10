@@ -1,8 +1,11 @@
 package com.github.jakicdong.techub.web.front.login.pwd;
 
+import com.github.jakicdong.techub.api.model.context.ReqInfoContext;
 import com.github.jakicdong.techub.api.model.vo.ResVo;
 import com.github.jakicdong.techub.api.model.vo.constants.StatusEnum;
 import com.github.jakicdong.techub.api.model.vo.user.UserPwdLoginReq;
+import com.github.jakicdong.techub.core.permission.Permission;
+import com.github.jakicdong.techub.core.permission.UserRole;
 import com.github.jakicdong.techub.core.util.SessionUtil;
 import com.github.jakicdong.techub.service.user.service.LoginService;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Optional;
 
 /*
 * @author JakicDong
@@ -59,6 +65,23 @@ public class LoginRestController {
         } else {
             return ResVo.fail(StatusEnum.LOGIN_FAILED_MIXED, "用户名和密码登录异常，请稍后重试");
         }
+    }
+
+    @Permission(role = UserRole.LOGIN)
+    @RequestMapping("logout")
+    public ResVo<Boolean> logOut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 释放会话
+        request.getSession().invalidate();
+        Optional.ofNullable(ReqInfoContext.getReqInfo()).ifPresent(s -> loginService.logout(s.getSession()));
+        // 移除cookie
+        response.addCookie(SessionUtil.delCookie(LoginService.SESSION_KEY));
+        // 重定向到当前页面
+        String referer = request.getHeader("Referer");
+        if (StringUtils.isBlank(referer)) {
+            referer = "/";
+        }
+        response.sendRedirect(referer);
+        return ResVo.ok(true);
     }
 
 

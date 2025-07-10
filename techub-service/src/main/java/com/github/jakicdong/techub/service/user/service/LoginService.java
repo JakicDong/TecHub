@@ -14,6 +14,13 @@ public interface LoginService {
 
 
     /**
+     * 登出
+     *
+     * @param session 用户会话
+     */
+    void logout(String session);
+
+    /**
      * 用户名密码方式登录
      *
      * @param username 用户名

@@ -57,6 +57,11 @@ public class LoginServiceImpl implements LoginService {
 //    @Autowired
 //    private PasswordEncoder passwordEncoder;
 
+
+    @Override
+    public void logout(String session) {
+        userSessionHelper.removeSession(session);
+    }
     /*
     * 用户密码方式登录
     * */
