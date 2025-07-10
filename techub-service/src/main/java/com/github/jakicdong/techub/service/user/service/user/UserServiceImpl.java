@@ -16,6 +16,7 @@ import com.github.jakicdong.techub.service.user.repository.dao.UserAiDao;
 import com.github.jakicdong.techub.service.user.repository.dao.UserDao;
 import com.github.jakicdong.techub.service.user.repository.dao.UserRelationDao;
 import com.github.jakicdong.techub.service.user.repository.entity.*;
+import com.github.jakicdong.techub.service.user.service.UserAiService;
 import com.github.jakicdong.techub.service.user.service.UserService;
 import com.github.jakicdong.techub.service.user.service.help.UserPwdEncoder;
 import com.github.jakicdong.techub.service.user.service.help.UserSessionHelper;
@@ -57,8 +58,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserPwdEncoder userPwdEncoder;
 
-//    @Autowired
-//    private UserAiService userAiService;
+    @Autowired
+    private UserAiService userAiService;
 
     @Override
     public List<SimpleUserInfoDTO> batchQuerySimpleUserInfo(Collection<Long> userIds) {
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService {
         userHomeDTO.setYearArticleList(yearArticleDTOS);
         return userHomeDTO;
     }
-
+    
     @Override
     public BaseUserInfoDTO getAndUpdateUserIpInfoBySessionId(String session, String clientIp) {
         if (StringUtils.isBlank(session)) {

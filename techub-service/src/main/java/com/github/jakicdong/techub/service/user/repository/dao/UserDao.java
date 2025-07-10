@@ -42,4 +42,16 @@ public class UserDao extends ServiceImpl<UserInfoMapper, UserInfoDO> {
         return userMapper.selectOne(queryUser);
     }
 
+    public void saveUser(UserDO user) {
+        if (user.getId() == null) {
+            userMapper.insert(user);
+        } else {
+            userMapper.updateById(user);
+        }
+    }
+
+    public UserDO getUserByUserId(Long userId) {
+        return userMapper.selectById(userId);
+    }
+
 }

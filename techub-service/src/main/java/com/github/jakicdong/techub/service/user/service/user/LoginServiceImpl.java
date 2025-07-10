@@ -54,8 +54,8 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private UserAiService userAiService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
 
     /**
