@@ -57,6 +57,28 @@ public class LoginServiceImpl implements LoginService {
 //    @Autowired
 //    private PasswordEncoder passwordEncoder;
 
+    /*
+    * 用户密码方式登录
+    * */
+    @Override
+    public String loginByUserPwd(String username, String password) {
+        UserDO user = userDao.getUserByUserName(username);
+        if (user == null) {
+            throw ExceptionUtil.of(StatusEnum.USER_NOT_EXISTS, "userName=" + username);
+        }
+        // passwordEncoder.matches(password, user.getPassword());
+        if (!userPwdEncoder.match(password, user.getPassword())) {
+            throw ExceptionUtil.of(StatusEnum.USER_PWD_ERROR);
+        }
+
+        Long userId = user.getId();
+        // 1. 为了兼容历史数据，对于首次登录成功的用户，初始化ai信息
+        userAiService.initOrUpdateAiInfo(new UserPwdLoginReq().setUserId(userId).setUsername(username).setPassword(password));
+
+        // 登录成功，返回对应的session
+        ReqInfoContext.getReqInfo().setUserId(userId);
+        return userSessionHelper.genSession(userId);
+    }
 
     /**
      * 用户名密码方式登录，若用户不存在，则进行注册
