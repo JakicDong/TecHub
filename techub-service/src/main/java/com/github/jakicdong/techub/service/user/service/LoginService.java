@@ -14,6 +14,14 @@ public interface LoginService {
 
 
     /**
+     * 给微信公众号的用户生成一个用于登录的会话
+     *
+     * @param userId 用户主键id
+     * @return
+     */
+    String loginByWx(Long userId);
+
+    /**
      * 登出
      *
      * @param session 用户会话

@@ -58,10 +58,23 @@ public class LoginServiceImpl implements LoginService {
 //    private PasswordEncoder passwordEncoder;
 
 
+    /**
+     * 给微信公众号的用户生成一个用于登录的会话
+     *
+     * @param userId 用户id
+     * @return
+     */
+    @Override
+    public String loginByWx(Long userId) {
+        return userSessionHelper.genSession(userId);
+    }
+
     @Override
     public void logout(String session) {
         userSessionHelper.removeSession(session);
     }
+
+
     /*
     * 用户密码方式登录
     * */
