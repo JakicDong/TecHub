@@ -11,10 +11,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -38,6 +36,56 @@ public class RedisClient {
                 throw new IllegalArgumentException("redis argument can not be null!");
             }
         }
+    }
+
+    public static PipelineAction pipelineAction() {
+        return new PipelineAction();
+    }
+
+
+
+    /**
+     * 自增
+     *
+     * @param key
+     * @param filed
+     * @param cnt
+     * @return
+     */
+    public static Long hIncr(String key, String filed, Integer cnt) {
+        return template.execute((RedisCallback<Long>) con -> con.hIncrBy(keyBytes(key), valBytes(filed), cnt));
+    }
+
+    /**
+     * redis 管道执行的封装链路
+     */
+    public static class PipelineAction {
+        private List<Runnable> run = new ArrayList<>();
+
+        private RedisConnection connection;
+
+        public PipelineAction add(String key, BiConsumer<RedisConnection, byte[]> conn) {
+            run.add(() -> conn.accept(connection, RedisClient.keyBytes(key)));
+            return this;
+        }
+
+        public PipelineAction add(String key, String field, ThreeConsumer<RedisConnection, byte[], byte[]> conn) {
+            run.add(() -> conn.accept(connection, RedisClient.keyBytes(key), valBytes(field)));
+            return this;
+        }
+
+        public void execute() {
+            template.executePipelined((RedisCallback<Object>) connection -> {
+                PipelineAction.this.connection = connection;
+                run.forEach(Runnable::run);
+                return null;
+            });
+        }
+    }
+
+    @FunctionalInterface
+    public interface ThreeConsumer<T, U, P> {
+        void accept(T t, U u, P p);
     }
 
     /**

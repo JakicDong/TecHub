@@ -66,7 +66,7 @@ public class ReqRecordFilter implements Filter{
             CrossUtil.buildCors(request, (HttpServletResponse) servletResponse);
             stopWatch.stop();
             stopWatch.start("业务执行");
-            filterChain.doFilter(request, servletResponse);
+            filterChain.doFilter(request, servletResponse);`
         } finally {
             if (stopWatch.isRunning()) {
                 // 避免doFitler执行异常，导致上面的 stopWatch无法结束，这里先首当结束一下上次的计数

@@ -13,6 +13,15 @@ public interface SitemapService {
 
 
     /**
+     * 保存用户访问信息
+     * @param visitIp 访问者ip
+     * @param path    访问的资源路径
+     */
+    void saveVisitInfo(String visitIp, String path);
+
+
+
+    /**
      * 查询站点某一天or总的访问信息
      *
      * @param date 日期，为空时，表示查询所有的站点信息
