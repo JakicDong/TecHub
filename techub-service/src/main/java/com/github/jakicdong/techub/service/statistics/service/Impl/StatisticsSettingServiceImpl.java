@@ -1,0 +1,53 @@
+package com.github.jakicdong.techub.service.statistics.service.Impl;
+
+import com.github.jakicdong.techub.service.article.service.ArticleReadService;
+import com.github.jakicdong.techub.service.article.service.ColumnService;
+import com.github.jakicdong.techub.service.statistics.service.RequestCountService;
+import com.github.jakicdong.techub.service.statistics.service.StatisticsSettingService;
+import com.github.jakicdong.techub.service.user.service.UserFootService;
+import com.github.jakicdong.techub.service.user.service.UserService;
+import com.github.jakicdong.techub.service.user.service.conf.AiConfig;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+
+/*
+* @author JakicDong
+* @description 数据统计后台接口
+* @time 2025/7/12 09:15
+*/
+@Slf4j
+@Service
+public class StatisticsSettingServiceImpl implements StatisticsSettingService {
+    @Autowired
+    private RequestCountService requestCountService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ColumnService columnService;
+
+    @Autowired
+    private UserFootService userFootService;
+
+    @Autowired
+    private ArticleReadService articleReadService;
+
+    @Resource
+    private AiConfig aiConfig;
+
+
+
+
+
+
+
+
+
+
+
+
+}
