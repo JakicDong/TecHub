@@ -1,5 +1,7 @@
 package com.github.jakicdong.techub.service.statistics.service.Impl;
 
+import com.github.jakicdong.techub.api.model.vo.statistics.dto.StatisticsCountDTO;
+import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
 import com.github.jakicdong.techub.service.article.service.ArticleReadService;
 import com.github.jakicdong.techub.service.article.service.ColumnService;
 import com.github.jakicdong.techub.service.statistics.service.RequestCountService;
@@ -43,8 +45,13 @@ public class StatisticsSettingServiceImpl implements StatisticsSettingService {
 
 
 
+    @Override
+    public StatisticsCountDTO getStatisticsCount() {
+        // 从 user_foot 表中查询点赞数、收藏数、留言数、阅读数
+        UserFootStatisticDTO userFootStatisticDTO =  userFootService.getFootCount();
 
 
+    }
 
 
 

@@ -8,6 +8,7 @@ import com.github.jakicdong.techub.core.util.IpUtil;
 import com.github.jakicdong.techub.core.util.SessionUtil;
 import com.github.jakicdong.techub.core.util.SpringUtil;
 import com.github.jakicdong.techub.service.sitemap.service.impl.SitemapServiceImpl;
+import com.github.jakicdong.techub.service.statistics.service.StatisticsSettingService;
 import com.github.jakicdong.techub.service.user.service.LoginService;
 import com.github.jakicdong.techub.web.global.GlobalInitService;
 import lombok.extern.slf4j.Slf4j;
