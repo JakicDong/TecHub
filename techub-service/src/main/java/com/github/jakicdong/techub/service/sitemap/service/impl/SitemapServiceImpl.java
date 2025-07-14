@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class SitemapServiceImpl implements SitemapService {
+
+
     /**
      * 保存站点数据模型
      * <p>
@@ -95,9 +97,6 @@ public class SitemapServiceImpl implements SitemapService {
             log.info("用户访问信息更新完成! 当前用户总访问: {}，今日访问: {}", globalUserVisitCnt, todayUserVisitCnt);
         }
     }
-
-
-
 
     /**
      * 查询站点某一天or总的访问信息

@@ -17,6 +17,13 @@ import java.util.List;
 public interface UserService {
 
     /**
+     * 用户计数
+     *
+     * @return
+     */
+    Long getUserCount();
+
+    /**
      * 批量查询用户基本信息
      *
      * @param userIds

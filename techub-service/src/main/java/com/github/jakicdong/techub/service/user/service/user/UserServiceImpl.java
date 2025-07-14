@@ -177,4 +177,10 @@ public class UserServiceImpl implements UserService {
         userAiService.initOrUpdateAiInfo(loginReq);
     }
 
+    @Override
+    public Long getUserCount() {
+        return this.userDao.getUserCount();
+    }
+
+
 }

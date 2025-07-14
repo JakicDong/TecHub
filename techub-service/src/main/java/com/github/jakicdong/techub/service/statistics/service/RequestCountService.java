@@ -6,4 +6,6 @@ package com.github.jakicdong.techub.service.statistics.service;
 * @time 2025/7/12 09:21
 */
 public interface RequestCountService {
+    Long getPvTotalCount();
+
 }

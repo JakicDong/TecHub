@@ -31,7 +31,6 @@ public class StatisticsSettingServiceImpl implements StatisticsSettingService {
 
     @Autowired
     private ColumnService columnService;
-
     @Autowired
     private UserFootService userFootService;
 
@@ -49,8 +48,29 @@ public class StatisticsSettingServiceImpl implements StatisticsSettingService {
     public StatisticsCountDTO getStatisticsCount() {
         // 从 user_foot 表中查询点赞数、收藏数、留言数、阅读数
         UserFootStatisticDTO userFootStatisticDTO =  userFootService.getFootCount();
+        if (userFootStatisticDTO == null) {
+            userFootStatisticDTO = new UserFootStatisticDTO();
+        }
+        String temp = "12345";
+        /*
+        * @author JakicDong
+        * @description 2131
+        * @time 2025/7/14 15:02
+        */
+        log.info(temp);
 
 
+        return StatisticsCountDTO.builder()
+                .userCount(userService.getUserCount())
+                .articleCount(articleReadService.getArticleCount())
+                .pvCount(requestCountService.getPvTotalCount())
+                .tutorialCount(columnService.getTutorialCount())
+                .commentCount(userFootStatisticDTO.getCommentCount())
+                .collectCount(userFootStatisticDTO.getCollectionCount())
+                .likeCount(userFootStatisticDTO.getPraiseCount())
+                .readCount(userFootStatisticDTO.getReadCount())
+                .starPayCount(aiConfig.getMaxNum().getStarNumber())
+                .build();
     }
 
 

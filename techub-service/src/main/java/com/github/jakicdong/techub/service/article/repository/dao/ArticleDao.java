@@ -86,6 +86,12 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
         return baseMapper.listYearArticleByUserId(userId);
     }
 
+    public Long countArticle(){
+        return lambdaQuery()
+                .eq(ArticleDO::getDeleted , YesOrNoEnum.NO.getCode())
+                .count();
+    }
+
 
 
 }
