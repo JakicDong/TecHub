@@ -114,4 +114,9 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     public Map<Long, Long> queryArticleCountsByCategory() {
         return articleDao.countArticleByCategoryId();
     }
+
+    @Override
+    public Long getArticleCount(){
+        return articleDao.countArticle();
+    }
 }

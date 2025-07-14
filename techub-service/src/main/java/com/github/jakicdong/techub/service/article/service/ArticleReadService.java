@@ -58,4 +58,12 @@ public interface ArticleReadService {
      */
     Map<Long, Long> queryArticleCountsByCategory();
 
+    /**
+     * 返回总的文章计数
+     *
+     * @return
+     */
+    Long getArticleCount();
+
+
 }

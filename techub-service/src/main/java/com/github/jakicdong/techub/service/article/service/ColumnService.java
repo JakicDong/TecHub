@@ -8,4 +8,11 @@ package com.github.jakicdong.techub.service.article.service;
 
 public interface ColumnService {
 
+    /**
+     * 返回教程数量
+     *
+     * @return
+     */
+    Long getTutorialCount();
+
 }
