@@ -11,6 +11,7 @@ import com.github.jakicdong.techub.service.statistics.repository.entitu.RequestC
 import com.github.jakicdong.techub.service.statistics.repository.mapper.RequestCountMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 
 
 @Repository
@@ -19,6 +20,17 @@ public class RequestCountDao extends ServiceImpl<RequestCountMapper, RequestCoun
 
     public Long getPvTotalCount() {
         return baseMapper.getPvTotalCount();
+    }
+
+    public RequestCountDO getRequestCount(String host, Date date){
+        return lambdaQuery()
+                .eq(RequestCountDO::getHost,host)
+                .eq(RequestCountDO::getDate,date)
+                .one();
+    }
+
+    public void incrementCount(Long id){
+        baseMapper.incrementCount(id);
     }
 
 }

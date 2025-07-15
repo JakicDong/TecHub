@@ -4,6 +4,7 @@ package com.github.jakicdong.techub.service.statistics.repository.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.jakicdong.techub.service.statistics.repository.entitu.RequestCountDO;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 /*
 * @author JakicDong
@@ -21,6 +22,15 @@ public interface RequestCountMapper extends BaseMapper<RequestCountDO> {
      */
     @Select("select sum(cnt) from request_count")
     Long getPvTotalCount();
+
+
+    /**
+     * 增加计数
+     *
+     * @param id
+     */
+    @Update("update request_count set cnt = cnt + 1 where id = #{id}")
+    void incrementCount(Long id);
 
 
 }

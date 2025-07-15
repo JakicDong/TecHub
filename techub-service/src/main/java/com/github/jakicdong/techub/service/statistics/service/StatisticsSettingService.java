@@ -11,13 +11,13 @@ import com.github.jakicdong.techub.api.model.vo.statistics.dto.StatisticsCountDT
 
 public interface StatisticsSettingService {
 
-//
-//    /**
-//     * 保存计数
-//     *
-//     * @param host
-//     */
-//    void saveRequestCount(String host);
+
+    /**
+     * 保存计数
+     *
+     * @param host
+     */
+    void saveRequestCount(String host);
     /**
      * 获取总数
      *
