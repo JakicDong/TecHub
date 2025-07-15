@@ -4,6 +4,7 @@ import com.github.jakicdong.techub.api.model.vo.statistics.dto.StatisticsCountDT
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
 import com.github.jakicdong.techub.service.article.service.ArticleReadService;
 import com.github.jakicdong.techub.service.article.service.ColumnService;
+import com.github.jakicdong.techub.service.statistics.repository.entitu.RequestCountDO;
 import com.github.jakicdong.techub.service.statistics.service.RequestCountService;
 import com.github.jakicdong.techub.service.statistics.service.StatisticsSettingService;
 import com.github.jakicdong.techub.service.user.service.UserFootService;
@@ -41,6 +42,18 @@ public class StatisticsSettingServiceImpl implements StatisticsSettingService {
     private AiConfig aiConfig;
 
 
+
+
+    @Override
+    public void saveRequestCount(String host) {
+        RequestCountDO requestCountDO = requestCountService.getRequestCount(host);
+        if (requestCountDO == null) {
+            requestCountService.insert(host);
+        } else {
+            // 改为数据库直接更新
+            requestCountService.incrementCount(requestCountDO.getId());
+        }
+    }
 
 
 
