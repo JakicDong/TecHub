@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import com.github.jakicdong.techub.web.global.GlobalInitService;
 
+import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
@@ -34,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 *  2. 判断用户是否登录
 * @time 2025/7/8 14:10
 */
+
 @Slf4j
 @WebFilter(urlPatterns = "/*", filterName = "reqRecordFilter", asyncSupported = true)
 public class ReqRecordFilter implements Filter{
@@ -43,10 +46,10 @@ public class ReqRecordFilter implements Filter{
      */
     private static final String GLOBAL_TRACE_ID_HEADER = "g-trace-id";
 
-    @Autowired
+    @Resource
     private GlobalInitService globalInitService;
 
-    @Autowired
+    @Resource
     private StatisticsSettingService statisticsSettingService;
 
     @Override
