@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.jakicdong.techub.service.user.repository.mapper.UserFootMapper">
+
+
+
+
+    <select id="getFootCount"
+            resultType="com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO">
+        SELECT
+            sum(if (f.praise_stat =${@com.github.paicoding.forum.api.model.enums.PraiseStatEnum@PRAISE.code}, 1, 0)) as praiseCount,
+            sum(if (f.collection_stat =${@com.github.paicoding.forum.api.model.enums.CollectionStatEnum@COLLECTION.code}, 1, 0)) as collectionCount,
+            sum(if (f.read_stat =${@com.github.paicoding.forum.api.model.enums.ReadStatEnum@READ.code}, 1, 0)) as readCount,
+            sum(if (f.comment_stat =${@com.github.paicoding.forum.api.model.enums.CommentStatEnum@COMMENT.code}, 1, 0)) as commentCount
+        FROM user_foot AS f
+    </select>
+
+</mapper>
