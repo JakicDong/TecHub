@@ -6,8 +6,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.EnvironmentAware;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.mail.javamail.JavaMailSender;
+
 
 @Component
 public class SpringUtil  implements ApplicationContextAware, EnvironmentAware {
@@ -21,6 +25,13 @@ public class SpringUtil  implements ApplicationContextAware, EnvironmentAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         // 容器启动时自动注入，方便后续获取bean
         SpringUtil.context = applicationContext;
+    }
+
+    public static Environment getEnvironment() {
+        if (environment == null) {
+            throw new IllegalStateException("Environment未初始化，请检查Spring上下文是否已加载");
+        }
+        return environment;
     }
 
     @Override

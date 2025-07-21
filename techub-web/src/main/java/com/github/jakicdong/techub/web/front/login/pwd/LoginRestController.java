@@ -8,6 +8,7 @@ import com.github.jakicdong.techub.core.permission.Permission;
 import com.github.jakicdong.techub.core.permission.UserRole;
 import com.github.jakicdong.techub.core.util.SessionUtil;
 import com.github.jakicdong.techub.service.user.service.LoginService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ import java.util.Optional;
 */
 @RestController
 @RequestMapping
+@Slf4j
 public class LoginRestController {
     @Autowired
     private LoginService loginService;
@@ -41,6 +43,7 @@ public class LoginRestController {
     public ResVo<Boolean> login(@RequestParam(name = "username") String username,
                                 @RequestParam(name = "password") String password,
                                 HttpServletResponse response){
+//        log.error("测试AlarmUtil邮件发送功能");
         String session = loginService.loginByUserPwd(username, password);// <==进入service层@Aizen
         if (StringUtils.isNotBlank(session)) {
             // cookie中写入用户登录信息，用于身份识别
@@ -49,6 +52,7 @@ public class LoginRestController {
         } else {
             return ResVo.fail(StatusEnum.LOGIN_FAILED_MIXED, "用户名和密码登录异常，请稍后重试");
         }
+
     }
 
     /**

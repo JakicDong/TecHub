@@ -16,7 +16,7 @@ spring:
   #    active: dal,web,config,image
   # 替换上面作废的spring.profiels.actice配置参数
   config:
-    import: application-dal.yml,application-web.yml,application-config.yml,application-pay.yml,application-ai.yml
+    import: application-dal.yml,application-web.yml,application-config.yml,application-pay.yml,application-ai.yml,application-email.yml
 
   liquibase:
     change-log: classpath:liquibase/master.xml
@@ -26,7 +26,6 @@ spring:
       enabled: true
       max-file-size: 5MB
       max-request-size: 10MB
-
 
 servlet:
   tomcat:
@@ -111,3 +110,5 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
+
+
