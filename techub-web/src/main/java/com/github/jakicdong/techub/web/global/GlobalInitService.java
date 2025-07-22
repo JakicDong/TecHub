@@ -62,6 +62,7 @@ public class GlobalInitService {
      * @param reqInfo
      */
     public void initLoginUser(ReqInfoContext.ReqInfo reqInfo) {
+        //Holder Spring提供的工具类,持有当前请求的上下文信息
         HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         if (request.getCookies() == null) {

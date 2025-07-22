@@ -8,7 +8,7 @@ import org.slf4j.MDC;
 * @time 2025/7/12 14:39
 */
 public class MdcUtil {
-
+    // 存储traceId的键名
     public static final String TRACE_ID_KEY = "traceId";
 
     public static void add(String key, String val) {

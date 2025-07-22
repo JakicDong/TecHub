@@ -41,9 +41,8 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //判断当前请求是不是映射到了具体的Controller方法上
         if (handler instanceof HandlerMethod) {
-
             //打印请求路径
-            log.info(" preHandle 请求路径：{}", request.getRequestURI());
+            log.info(">>>>>PRE  GlobalViewInterceptor:preHandle开始====请求路径：{}<<<<<", request.getRequestURI());
 
             //权限注解获取
             HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -96,11 +95,9 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        log.info(">>>>POST GlobalViewInterceptor:postHandle====请求路径：{}", request.getRequestURI());
         if (!ObjectUtils.isEmpty(modelAndView)) {
-            log.info(" postHandle 请求路径：{}", request.getRequestURI());
-            log.info("---------------------------------------------------------");
-
-
+            log.info(">>>>POST modelAndView不为空");
             if (response.getStatus() != HttpStatus.OK.value()) {
                 try {
                     ReqInfoContext.ReqInfo reqInfo = new ReqInfoContext.ReqInfo();

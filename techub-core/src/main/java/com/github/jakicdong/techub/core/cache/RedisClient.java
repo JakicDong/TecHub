@@ -21,15 +21,32 @@ import java.util.stream.IntStream;
 * @description redis客户端
 * @time 2025/7/2 13:18
 */
-public class RedisClient {
-    private static final Charset CODE = StandardCharsets.UTF_8;
-    private static final String KEY_PREFIX = "th_";
-    private static RedisTemplate<String, String> template;
 
+/**
+ * Redis客户端工具类，提供对Redis的常用操作封装
+ * 特性：
+ * 1. 自动添加前缀(th_)到所有key
+ * 2. 支持字符串、对象自动序列化/反序列化
+ * 3. 提供管道操作支持
+ */
+public class RedisClient {
+    private static final Charset CODE = StandardCharsets.UTF_8; // 编码格式
+    private static final String KEY_PREFIX = "th_"; // key前缀
+    private static RedisTemplate<String, String> template; // Redis模板
+
+    /**
+     * 注册RedisTemplate实例
+     * @param template Redis操作模板
+     */
     public static void register(RedisTemplate<String, String> template) {
         RedisClient.template = template;
     }
 
+    /**
+     * 参数空值检查
+     * @param args 需要检查的参数
+     * @throws IllegalArgumentException 当参数为null时抛出
+     */
     public static void nullCheck(Object... args) {
         for (Object obj : args) {
             if (obj == null) {
@@ -38,26 +55,32 @@ public class RedisClient {
         }
     }
 
+    /**
+     * 创建管道操作实例
+     * @return PipelineAction实例
+     */
     public static PipelineAction pipelineAction() {
         return new PipelineAction();
     }
 
-
-
     /**
-     * 自增
-     *
-     * @param key
-     * @param filed
-     * @param cnt
-     * @return
+     * Hash结构字段自增
+     * @param key Redis key
+     * @param filed Hash字段
+     * @param cnt 增量值
+     * @return 自增后的值
      */
     public static Long hIncr(String key, String filed, Integer cnt) {
         return template.execute((RedisCallback<Long>) con -> con.hIncrBy(keyBytes(key), valBytes(filed), cnt));
     }
 
     /**
-     * redis 管道执行的封装链路
+     * Redis管道操作封装类
+     * 使用示例：
+     * RedisClient.pipelineAction()
+     *     .add("key1", (conn, key) -> conn.set(key, valBytes("value")))
+     *     .add("key2", "field", (conn, key, field) -> conn.hSet(key, field, valBytes("value")))
+     *     .execute();
      */
     public static class PipelineAction {
         private List<Runnable> run = new ArrayList<>();

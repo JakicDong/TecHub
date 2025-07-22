@@ -52,9 +52,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ArticleDao articleDao;
 
-//    @Autowired
-//    private UserSessionHelper userSessionHelper;
-//
+
     @Autowired
     private UserPwdEncoder userPwdEncoder;
 
