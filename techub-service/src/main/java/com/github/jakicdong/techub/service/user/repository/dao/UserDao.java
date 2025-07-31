@@ -59,5 +59,13 @@ public class UserDao extends ServiceImpl<UserInfoMapper, UserInfoDO> {
                 .eq(UserInfoDO::getDeleted, YesOrNoEnum.NO.getCode())
                 .count();
     }
+    /*
+    * @author JakicDong
+    * @description 第三方账号登录方式
+    * @time 2025/7/31 15:56
+    */
+    public UserDO getByThirdAccountId(String accountId) {
+        return userMapper.getByThirdAccountId(accountId);
+    }
 
 }

@@ -85,5 +85,34 @@ public class RegisterServiceImpl implements RegisterService {
             }
         });
     }
+    
+    /*
+    * @author JakicDong
+    * @description 通过微信公众号进行注册
+    * @time 2025/7/31 15:59
+    */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long registerByWechat(String thirdAccount){
+        // 用户不存在，则需要注册
+        // 1. 保存用户登录信息
+        UserDO user = new UserDO();
+        user.setThirdAccountId(thirdAccount);
+        user.setLoginType(LoginTypeEnum.WECHAT.getType());
+        userDao.saveUser(user);
+
+        // 2. 初始化用户信息，随机生成用户昵称 + 头像
+        UserInfoDO userInfo = new UserInfoDO();
+        userInfo.setUserId(user.getId());
+        userInfo.setUserName(UserRandomGenHelper.genNickName());
+        userInfo.setPhoto(UserRandomGenHelper.genAvatar());
+        userDao.save(userInfo);
+
+        // 3. 保存ai相互信息
+        UserAiDO userAiDO = UserAiConverter.initAi(user.getId());
+        userAiDao.saveOrUpdateAiBindInfo(userAiDO, null);
+        processAfterUserRegister(user.getId());
+        return user.getId();
+    }
 
 }

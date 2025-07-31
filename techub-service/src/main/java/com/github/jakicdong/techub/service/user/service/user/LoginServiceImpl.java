@@ -4,6 +4,7 @@ import com.github.jakicdong.techub.api.model.context.ReqInfoContext;
 import com.github.jakicdong.techub.api.model.exception.ExceptionUtil;
 import com.github.jakicdong.techub.api.model.vo.constants.StatusEnum;
 import com.github.jakicdong.techub.api.model.vo.user.UserPwdLoginReq;
+import com.github.jakicdong.techub.api.model.vo.user.UserSaveReq;
 import com.github.jakicdong.techub.service.user.repository.dao.UserAiDao;
 import com.github.jakicdong.techub.service.user.repository.dao.UserDao;
 import com.github.jakicdong.techub.service.user.repository.entity.UserAiDO;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /*
 * @author JakicDong
@@ -173,4 +175,27 @@ public class LoginServiceImpl implements LoginService {
             throw ExceptionUtil.of(StatusEnum.UNEXPECT_ERROR, "非法的邀请码【" + starNumber + "】");
         }
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long autoRegisterWxUserInfo(String uuid) {
+        UserSaveReq req = new UserSaveReq().setLoginType(0).setThirdAccountId(uuid);
+        Long userId = registerOrGetUserInfo(req);
+        ReqInfoContext.getReqInfo().setUserId(userId);
+        return userId;
+    }
+    /**
+     * 没有注册时，先注册一个用户；若已经有，则登录
+     *
+     * @param req
+     */
+    private Long registerOrGetUserInfo(UserSaveReq req) {
+        UserDO user = userDao.getByThirdAccountId(req.getThirdAccountId());
+        if (user == null) {
+            return registerService.registerByWechat(req.getThirdAccountId());
+        }
+        return user.getId();
+    }
+
+
 }

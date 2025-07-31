@@ -46,4 +46,11 @@ public interface LoginService {
      */
     String registerByUserPwd(UserPwdLoginReq loginReq);
 
+    /*
+    * @author JakicDong
+    * @description 在微信公众号登录的方式下,自动注册用户
+    * @time 2025/7/31 15:54
+    */
+    Long autoRegisterWxUserInfo(String uuid);
+
 }

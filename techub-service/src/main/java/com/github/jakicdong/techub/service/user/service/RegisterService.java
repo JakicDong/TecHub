@@ -19,4 +19,12 @@ public interface RegisterService {
      * @return
      */
     Long registerByUserNameAndPassword(UserPwdLoginReq loginReq);
+    
+    
+    /*
+    * @author JakicDong
+    * @description 通过微信公众号进行注册
+    * @time 2025/7/31 15:58
+    */
+    Long registerByWechat(String thirdAccount);
 }
