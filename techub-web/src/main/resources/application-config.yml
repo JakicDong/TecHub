@@ -15,13 +15,13 @@ view:
 #    zsxqPosterUrl: https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/javabetter.jpg
     zsxqPosterUrl: https://cdn.jsdelivr.net/gh/JakicDong/blog-assets@main/images/logo.png
 
-    contactMeTitle: 联系我 - 沉默王二的狗腿子
-    contactMeWxQrCode: https://cdn.tobebetterjavaer.com/paicoding/paicoding-qrcode.png
-    contactMeStarQrCode: https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/qiye-weixin.png
+    contactMeTitle: 联系我 - JakicDong
+    contactMeWxQrCode: https://cdn.jsdelivr.net/gh/JakicDong/blog-assets@main/images/JakicfuwuhaoQr1.jpg
+    contactMeStarQrCode: https://cdn.jsdelivr.net/gh/JakicDong/blog-assets@main/images/JakicfuwuhaoQr1.jpg
     pageSize: 20
     cdnImgStyle:
-    websiteRecord: 备案被小人偷袭了
+    websiteRecord: TecHub
     wxLoginUrl: http://weixin.qq.com/r/WxwpMefE-rqBraNS90lJ
     host: http://127.0.0.1:${server.port}
-    welcomeInfo: 欢迎来到技术派，戳<a href="/article/detail/15">技术派全方位视角解读</a>了解我们
+    welcomeInfo: 欢迎来到TecHub，戳<a href="/article/detail/15">技术派全方位视角解读</a>了解我们
     oss:

@@ -1,14 +1,15 @@
-package com.github.jakicdong.techub.web.login.wx.helper;
+package com.github.jakicdong.techub.web.front.login.wx.helper;
 
 import com.github.jakicdong.techub.api.model.vo.user.wx.BaseWxMsgResVo;
 import com.github.jakicdong.techub.api.model.vo.user.wx.WxImgTxtItemVo;
 import com.github.jakicdong.techub.api.model.vo.user.wx.WxImgTxtMsgResVo;
 import com.github.jakicdong.techub.api.model.vo.user.wx.WxTxtMsgResVo;
 import com.github.jakicdong.techub.core.util.CodeGenerateUtil;
+import com.github.jakicdong.techub.service.user.service.LoginService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -19,6 +20,10 @@ import java.util.List;
 @Slf4j
 @Component
 public class WxAckHelper {
+    @Autowired
+    private LoginService sessionService;
+    @Autowired
+    private WxLoginHelper qrLoginHelper;
 
     public BaseWxMsgResVo buildResponseBody(String eventType, String content, String fromUser) {
         // 返回的文本消息
@@ -31,6 +36,14 @@ public class WxAckHelper {
             "个人博客地址:https://jakicdong.github.io/ \n" +
             "个人github仓库:https://github.com/JakicDong/ \n ";
             log.info("有人订阅");
+        }// 微信公众号登录
+        else if (CodeGenerateUtil.isVerifyCode(content)) {
+            sessionService.autoRegisterWxUserInfo(fromUser);
+            if (qrLoginHelper.login(content)) {
+                textRes = "登录成功，开始愉快的使用TecHub！";
+            } else {
+                textRes = "验证码过期了，刷新登录页面重试一下吧";
+            }
         }else {
             textRes =
                     "个人博客地址:https://jakicdong.github.io/ \n" +

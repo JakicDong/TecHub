@@ -1,12 +1,12 @@
-package com.github.jakicdong.techub.web.login.wx.callback;
+package com.github.jakicdong.techub.web.front.login.wx.callback;
 
 
 import com.github.jakicdong.techub.api.model.vo.user.wx.BaseWxMsgResVo;
 import com.github.jakicdong.techub.api.model.vo.user.wx.WxTxtMsgReqVo;
 import com.github.jakicdong.techub.api.model.vo.user.wx.WxTxtMsgResVo;
 import com.github.jakicdong.techub.service.user.service.LoginService;
+import com.github.jakicdong.techub.web.front.login.wx.helper.WxAckHelper;
 import com.github.jakicdong.techub.web.front.login.wx.helper.WxLoginHelper;
-import com.github.jakicdong.techub.web.login.wx.helper.WxAckHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

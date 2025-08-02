@@ -1,4 +1,4 @@
-package com.github.jakicdong.techub.web.login.wx.vo;
+package com.github.jakicdong.techub.web.front.login.wx.vo;
 
 
 import lombok.Data;

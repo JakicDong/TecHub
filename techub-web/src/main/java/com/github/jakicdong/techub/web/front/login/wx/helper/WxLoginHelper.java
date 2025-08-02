@@ -122,7 +122,7 @@ public class WxLoginHelper {
         SseEmitter lastSse = oldCode == null ? null : verifyCodeCache.getIfPresent(oldCode);
         if (lastSse == null) {
             log.info("last deviceId:{}, code:{}, sse closed!", deviceId, oldCode);
-            deviceCodeCache.invalidate(deviceId);
+            deviceCodeCache.invalidate(deviceId);//移除
             return null;
         }
 
