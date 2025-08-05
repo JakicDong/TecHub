@@ -70,10 +70,10 @@ public class ReqRecordFilter implements Filter{
             CrossUtil.buildCors(request, (HttpServletResponse) servletResponse);
             stopWatch.stop();
             stopWatch.start("业务执行");
-            log.info("-------------------ReqRecordFilter的doFilter传递2------------------");
+            log.info("-------------------ReqRecordFilter的doFilter传递2");
             filterChain.doFilter(request, servletResponse);
         } finally {
-            log.info("-------------------ReqRecordFilter的doFilter回来3------------------");
+            log.info("-------------------ReqRecordFilter的doFilter回来3");
             if (stopWatch.isRunning()) {
                 // 避免doFitler执行异常，导致上面的 stopWatch无法结束，这里先首当结束一下上次的计数
                 stopWatch.stop();
@@ -97,7 +97,7 @@ public class ReqRecordFilter implements Filter{
     }
 
     private HttpServletRequest initReqInfo(HttpServletRequest request, HttpServletResponse response) {
-        log.info("------initReqInfo开始------");
+//        log.info("------initReqInfo开始------");
         if (isStaticURI(request)) {
             // 静态资源直接放行
             return request;
@@ -154,7 +154,7 @@ public class ReqRecordFilter implements Filter{
             if (!EnvUtil.isPro()) {
                 log.info("{} -> 请求构建耗时: \n{}", request.getRequestURI(), stopWatch.prettyPrint(TimeUnit.MILLISECONDS));
             }
-            log.info("------initReqInfo结束------");
+//            log.info("------initReqInfo结束------");
         }
 
         return request;

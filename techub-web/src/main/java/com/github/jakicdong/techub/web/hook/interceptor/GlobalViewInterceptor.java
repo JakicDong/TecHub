@@ -42,7 +42,7 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
         //判断当前请求是不是映射到了具体的Controller方法上
         if (handler instanceof HandlerMethod) {
             //打印请求路径
-            log.info(">>>>>PRE  GlobalViewInterceptor:preHandle开始====请求路径：{}<<<<<", request.getRequestURI());
+            log.info(">>>>> PRE  GlobalViewInterceptor:preHandle开始====请求路径：{} <<<<<", request.getRequestURI());
 
             //权限注解获取
             HandlerMethod handlerMethod = (HandlerMethod) handler;
