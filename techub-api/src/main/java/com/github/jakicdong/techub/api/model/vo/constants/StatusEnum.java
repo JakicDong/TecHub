@@ -2,6 +2,11 @@ package com.github.jakicdong.techub.api.model.vo.constants;
 
 import lombok.Getter;
 
+/*
+* @author JakicDong
+* @description 状态码枚举
+* @time 2025/7/1 15:36
+*/
 /**
  * 异常码规范：
  * xxx - xxx - xxx
@@ -19,8 +24,6 @@ import lombok.Getter;
  * <p>
  * code: 具体的业务code
  *
- * @author YiHui
- * @date 2022/7/27
  */
 @Getter
 public enum StatusEnum {
