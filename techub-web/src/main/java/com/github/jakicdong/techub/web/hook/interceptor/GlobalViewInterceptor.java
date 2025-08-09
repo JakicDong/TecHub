@@ -43,7 +43,7 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             // 1. 得到接口需要的权限信息
             //打印请求路径
-            log.info(">>>>> PRE  GlobalViewInterceptor:preHandle开始====请求路径：{} <<<<<", request.getRequestURI());
+//            log.info(">>>>> PRE  GlobalViewInterceptor:preHandle开始====请求路径：{} <<<<<", request.getRequestURI());
 
             //权限注解获取
             HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -100,9 +100,9 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info(">>>>POST GlobalViewInterceptor:postHandle====请求路径：{}", request.getRequestURI());
+//        log.info(">>>>POST GlobalViewInterceptor:postHandle====请求路径：{}", request.getRequestURI());
         if (!ObjectUtils.isEmpty(modelAndView)) {
-            log.info(">>>>POST modelAndView不为空");
+//            log.info(">>>>POST modelAndView不为空");
             if (response.getStatus() != HttpStatus.OK.value()) {
                 try {
                     ReqInfoContext.ReqInfo reqInfo = new ReqInfoContext.ReqInfo();
