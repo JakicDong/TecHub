@@ -41,6 +41,7 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //判断当前请求是不是映射到了具体的Controller方法上
         if (handler instanceof HandlerMethod) {
+            // 1. 得到接口需要的权限信息
             //打印请求路径
             log.info(">>>>> PRE  GlobalViewInterceptor:preHandle开始====请求路径：{} <<<<<", request.getRequestURI());
 
@@ -51,6 +52,7 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
             if (permission == null) {
                 permission = handlerMethod.getBeanType().getAnnotation(Permission.class);
             }
+            // 2. 当访问“不需要权限的接口”时
             //无权限时候的处理
             if (permission == null || permission.role() == UserRole.ALL) {
                 if (ReqInfoContext.getReqInfo() != null) {
@@ -59,7 +61,8 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
                 }
                 return true;
             }
-
+            // 3. 当访问“需要权限的接口”时
+            // 3.1 对游客执行以下操作
             if (ReqInfoContext.getReqInfo() == null || ReqInfoContext.getReqInfo().getUserId() == null) {
                 if (handlerMethod.getMethod().getAnnotation(ResponseBody.class) != null
                         || handlerMethod.getMethod().getDeclaringClass().getAnnotation(RestController.class) != null) {
@@ -76,6 +79,8 @@ public class GlobalViewInterceptor implements AsyncHandlerInterceptor {
                 }
                 return false;
             }
+
+            // 3.2 对不是管理员的用户执行以下操作
             if (permission.role() == UserRole.ADMIN && !UserRole.ADMIN.name().equalsIgnoreCase(ReqInfoContext.getReqInfo().getUser().getRole())) {
                 // 设置为无权限
                 response.setStatus(HttpStatus.FORBIDDEN.value());

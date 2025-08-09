@@ -137,7 +137,7 @@ public class ReqRecordFilter implements Filter{
             // 初始化登录信息
             globalInitService.initLoginUser(reqInfo);
             stopWatch.stop();
-
+            //保存请求信息到线程上下文
             ReqInfoContext.addReqInfo(reqInfo);
             stopWatch.start("pv/uv站点统计");
             // 更新uv/pv计数
