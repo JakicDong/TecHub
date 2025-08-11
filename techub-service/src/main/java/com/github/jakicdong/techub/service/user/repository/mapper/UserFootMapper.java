@@ -1,8 +1,12 @@
 package com.github.jakicdong.techub.service.user.repository.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 
 /*
@@ -15,4 +19,17 @@ public interface UserFootMapper extends BaseMapper<UserFootDO> {
 
 
     UserFootStatisticDTO getFootCount();
+
+    /**
+     * 查询文章的点赞列表
+     *
+     * @param documentId
+     * @param type
+     * @param size
+     * @return
+     */
+    List<SimpleUserInfoDTO> listSimpleUserInfosByArticleId(@Param("documentId") Long documentId,
+                                                           @Param("type") Integer type,
+                                                           @Param("size") int size);
+
 }

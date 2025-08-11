@@ -17,12 +17,11 @@ import java.util.List;
 * @time 2025/8/9 19:57
 */
 @Data
-public class ArticleDetailVo{
-
+public class ArticleDetailVo {
     /**
      * 文章信息
      */
-    private ArticleDTO articleDTO;
+    private ArticleDTO article;
 
     /**
      * 评论信息
@@ -55,6 +54,4 @@ public class ArticleDetailVo{
      * 打赏用户列表
      */
     private List<SimpleUserInfoDTO> payUsers;
-
-
 }

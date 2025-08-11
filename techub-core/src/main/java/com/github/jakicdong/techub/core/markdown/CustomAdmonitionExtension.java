@@ -1,7 +1,6 @@
-package com.github.paicoding.forum.core.markdown;
+package com.github.jakicdong.techub.core.markdown;
 
 import com.vladsch.flexmark.ext.admonition.AdmonitionBlock;
-
 import com.vladsch.flexmark.ext.admonition.internal.AdmonitionNodeFormatter;
 import com.vladsch.flexmark.ext.admonition.internal.AdmonitionNodeRenderer;
 import com.vladsch.flexmark.formatter.Formatter;

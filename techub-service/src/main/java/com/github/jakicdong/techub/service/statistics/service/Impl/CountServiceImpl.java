@@ -2,15 +2,22 @@ package com.github.jakicdong.techub.service.statistics.service.Impl;
 
 import com.github.jakicdong.techub.api.model.vo.user.dto.ArticleFootCountDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserStatisticInfoDTO;
+import com.github.jakicdong.techub.service.article.repository.dao.ArticleDao;
 import com.github.jakicdong.techub.service.statistics.constants.CountConstants;
 import com.github.jakicdong.techub.service.statistics.service.CountService;
 import org.springframework.stereotype.Service;
 import com.github.jakicdong.techub.core.cache.RedisClient;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 @Service
 public class CountServiceImpl implements CountService {
+
+    @Resource
+    private ArticleDao articleDao;
+
+
 
 
 
@@ -37,6 +44,20 @@ public class CountServiceImpl implements CountService {
         info.setReadCount(ans.getOrDefault(CountConstants.READ_COUNT, 0));
         info.setFansCount(ans.getOrDefault(CountConstants.FANS_COUNT, 0));
         return info;
+    }
+
+
+    @Override
+    public void incrArticleReadCount(Long authorUserId, Long articleId) {
+        // db层的计数+1
+        articleDao.incrReadCount(articleId);
+        // redis计数器 +1
+        RedisClient.pipelineAction()
+                .add(CountConstants.ARTICLE_STATISTIC_INFO + articleId, CountConstants.READ_COUNT,
+                        (connection, key, value) -> connection.hIncrBy(key, value, 1))
+                .add(CountConstants.USER_STATISTIC_INFO + authorUserId, CountConstants.READ_COUNT,
+                        (connection, key, value) -> connection.hIncrBy(key, value, 1))
+                .execute();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.github.paicoding.forum.core.markdown;
+package com.github.jakicdong.techub.core.markdown;
 
 import com.vladsch.flexmark.ast.ListItem;
 import com.vladsch.flexmark.ast.util.Parsing;
@@ -108,7 +108,7 @@ public class CustomAdmonitionBlockParser extends AbstractBlockParser {
 
         @Override
         public @Nullable SpecialLeadInHandler getLeadInHandler(@NotNull DataHolder options) {
-            return CustomAdmonitionBlockParser.AdmonitionLeadInHandler.HANDLER;
+            return AdmonitionLeadInHandler.HANDLER;
         }
 
         @Override
@@ -119,14 +119,12 @@ public class CustomAdmonitionBlockParser extends AbstractBlockParser {
         @NotNull
         @Override
         public BlockParserFactory apply(@NotNull DataHolder options) {
-            return new CustomAdmonitionBlockParser
-                    .BlockFactory(options);
+            return new BlockFactory(options);
         }
     }
 
     static class AdmonitionLeadInHandler implements SpecialLeadInHandler {
-        final static SpecialLeadInHandler HANDLER = new CustomAdmonitionBlockParser
-                .AdmonitionLeadInHandler();
+        final static SpecialLeadInHandler HANDLER = new AdmonitionLeadInHandler();
 
         @Override
         public boolean escape(@NotNull BasedSequence sequence, @Nullable DataHolder options, @NotNull Consumer<CharSequence> consumer) {

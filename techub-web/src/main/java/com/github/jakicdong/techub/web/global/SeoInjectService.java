@@ -2,9 +2,13 @@ package com.github.jakicdong.techub.web.global;
 
 
 import com.github.jakicdong.techub.api.model.context.ReqInfoContext;
+import com.github.jakicdong.techub.api.model.vo.article.dto.TagDTO;
 import com.github.jakicdong.techub.api.model.vo.seo.Seo;
 import com.github.jakicdong.techub.api.model.vo.seo.SeoTagVo;
+import com.github.jakicdong.techub.core.util.DateUtil;
 import com.github.jakicdong.techub.web.config.GlobalViewConfig;
+import com.github.jakicdong.techub.web.front.article.vo.ArticleDetailVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -15,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /*
 * @author JakicDong
@@ -75,6 +80,58 @@ public class SeoInjectService {
             ReqInfoContext.getReqInfo().setSeo(seo);
         }
         return seo;
+    }
+
+
+    /**
+     * 文章详情页的seo标签
+     *
+     * @param detail
+     */
+    public void initColumnSeo(ArticleDetailVo detail) {
+        Seo seo = initBasicSeoTag();
+        List<SeoTagVo> list = seo.getOgp();
+        Map<String, Object> jsonLd = seo.getJsonLd();
+
+        String title = detail.getArticle().getTitle();
+        String description = detail.getArticle().getSummary();
+        String authorName = detail.getAuthor().getUserName();
+        String updateTime = DateUtil.time2LocalTime(detail.getArticle().getLastUpdateTime()).toString();
+        String publishedTime = DateUtil.time2LocalTime(detail.getArticle().getCreateTime()).toString();
+        String image = detail.getArticle().getCover();
+
+        list.add(new SeoTagVo("og:title", title));
+        list.add(new SeoTagVo("og:description", detail.getArticle().getSummary()));
+        list.add(new SeoTagVo("og:type", "article"));
+        list.add(new SeoTagVo("og:locale", "zh-CN"));
+        list.add(new SeoTagVo("og:updated_time", updateTime));
+
+        list.add(new SeoTagVo("article:modified_time", updateTime));
+        list.add(new SeoTagVo("article:published_time", publishedTime));
+        list.add(new SeoTagVo("article:tag", detail.getArticle().getTags().stream().map(TagDTO::getTag).collect(Collectors.joining(","))));
+        list.add(new SeoTagVo("article:section", detail.getArticle().getCategory().getCategory()));
+        list.add(new SeoTagVo("article:author", authorName));
+
+        list.add(new SeoTagVo("author", authorName));
+        list.add(new SeoTagVo("title", title));
+        list.add(new SeoTagVo("description", description));
+        list.add(new SeoTagVo("keywords", detail.getArticle().getCategory().getCategory() + "," + detail.getArticle().getTags().stream().map(TagDTO::getTag).collect(Collectors.joining(","))));
+
+        if (StringUtils.isNotBlank(image)) {
+            list.add(new SeoTagVo("og:image", image));
+            jsonLd.put("image", image);
+        }
+
+        jsonLd.put("headline", title);
+        jsonLd.put("description", description);
+        Map<String, Object> author = new HashMap<>();
+        author.put("@type", "Person");
+        author.put("name", authorName);
+        jsonLd.put("author", author);
+        jsonLd.put("dateModified", updateTime);
+        jsonLd.put("datePublished", publishedTime);
+
+        ReqInfoContext.getReqInfo().setSeo(seo);
     }
 
 }

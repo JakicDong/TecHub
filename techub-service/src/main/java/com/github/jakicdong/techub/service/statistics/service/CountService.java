@@ -27,5 +27,14 @@ public interface CountService {
      */
     UserStatisticInfoDTO queryUserStatisticInfo(Long userId);
 
+    /**
+     * 文章计数+1
+     *
+     * @param authorUserId 作者
+     * @param articleId    文章
+     * @return 计数器
+     */
+    void incrArticleReadCount(Long authorUserId, Long articleId);
+
 
 }

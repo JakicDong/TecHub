@@ -8,11 +8,27 @@
     <select id="getFootCount"
             resultType="com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO">
         SELECT
-            sum(if (f.praise_stat =${@com.github.paicoding.forum.api.model.enums.PraiseStatEnum@PRAISE.code}, 1, 0)) as praiseCount,
-            sum(if (f.collection_stat =${@com.github.paicoding.forum.api.model.enums.CollectionStatEnum@COLLECTION.code}, 1, 0)) as collectionCount,
-            sum(if (f.read_stat =${@com.github.paicoding.forum.api.model.enums.ReadStatEnum@READ.code}, 1, 0)) as readCount,
-            sum(if (f.comment_stat =${@com.github.paicoding.forum.api.model.enums.CommentStatEnum@COMMENT.code}, 1, 0)) as commentCount
+            sum(if (f.praise_stat =${@com.github.jakicdong.techub.api.model.enums.PraiseStatEnum@PRAISE.code}, 1, 0)) as praiseCount,
+            sum(if (f.collection_stat =${@com.github.jakicdong.techub.api.model.enums.CollectionStatEnum@COLLECTION.code}, 1, 0)) as collectionCount,
+            sum(if (f.read_stat =${@com.github.jakicdong.techub.api.model.enums.ReadStatEnum@READ.code}, 1, 0)) as readCount,
+            sum(if (f.comment_stat =${@com.github.jakicdong.techub.api.model.enums.CommentStatEnum@COMMENT.code}, 1, 0)) as commentCount
         FROM user_foot AS f
     </select>
+
+
+    <select id="listSimpleUserInfosByArticleId"
+            resultType="com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO">
+        SELECT ui.user_id as userId,
+               ui.user_name as name,
+               ui.photo as avatar
+        FROM user_foot uf
+                 left join user_info ui on uf.user_id = ui.user_id
+        WHERE uf.document_type = #{type}
+          AND uf.document_id = #{documentId}
+          AND uf.praise_stat = 1
+        order by uf.update_time desc limit #{size}
+    </select>
+
+
 
 </mapper>
