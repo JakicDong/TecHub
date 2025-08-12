@@ -14,6 +14,7 @@ public class ColumnServiceImpl implements ColumnService {
     @Autowired
     private ColumnDao columnDao;
 
+    @Autowired
     private ColumnArticleDao columnArticleDao;
 
 

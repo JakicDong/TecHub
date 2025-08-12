@@ -80,8 +80,9 @@ public class ArticleViewController extends BaseViewController {
         if (columnArticle != null) {
             return String.format("redirect:/column/%d/%d", columnArticle.getColumnId(), columnArticle.getSection());
         }
-
+        //创建文章详情VO(包含多个模块的DTO)
         ArticleDetailVo vo = new ArticleDetailVo();
+
         // 文章相关信息
         ArticleDTO articleDTO = articleService.queryFullArticleInfo(articleId, ReqInfoContext.getReqInfo().getUserId());
         // 根据文章类型，来自动处理文章类容
@@ -90,7 +91,6 @@ public class ArticleViewController extends BaseViewController {
         articleDTO.setContent(MarkdownConverter.markdownToHtml(content));
         vo.setArticle(articleDTO);
 
-
         // 评论信息
         List<TopCommentDTO> comments = commentService.getArticleComments(articleId, PageParam.newPageInstance(1L, 10L));
         vo.setComments(comments);
@@ -98,8 +98,7 @@ public class ArticleViewController extends BaseViewController {
         // 热门评论
         TopCommentDTO hotComment = commentService.queryHotComment(articleId);
         vo.setHotComment(hotComment);
-
-
+        
         // 作者信息
         UserStatisticInfoDTO user = userService.queryUserInfoWithStatistic(articleDTO.getAuthor());
         articleDTO.setAuthorName(user.getUserName());

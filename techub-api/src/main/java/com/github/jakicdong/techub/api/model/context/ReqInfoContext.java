@@ -13,6 +13,7 @@ import lombok.Data;
 
 import java.security.Principal;
 
+//请求的上下文信息
 public class ReqInfoContext {
     private static TransmittableThreadLocal<ReqInfo> contexts = new TransmittableThreadLocal<>();
 

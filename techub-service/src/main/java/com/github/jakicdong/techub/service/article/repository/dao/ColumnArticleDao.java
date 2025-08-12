@@ -3,11 +3,13 @@ package com.github.jakicdong.techub.service.article.repository.dao;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.jakicdong.techub.service.article.repository.entity.ColumnArticleDO;
 import com.github.jakicdong.techub.service.article.repository.mapper.ColumnArticleMapper;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
 
+@Repository
 public class ColumnArticleDao extends ServiceImpl<ColumnArticleMapper, ColumnArticleDO>  {
     @Resource
     private ColumnArticleMapper columnArticleMapper;

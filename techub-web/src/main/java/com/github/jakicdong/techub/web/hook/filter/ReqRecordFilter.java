@@ -98,6 +98,7 @@ public class ReqRecordFilter implements Filter{
     public void destroy() {
     }
 
+    //初始化请求上下文信息
     private HttpServletRequest initReqInfo(HttpServletRequest request, HttpServletResponse response) {
 //        log.info("------initReqInfo开始------");
         if (isStaticURI(request)) {

@@ -162,7 +162,7 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         article.setPraisedUsers(userFootService.queryArticlePraisedUsers(articleId));
         return article;
     }
-
+    
     @Override
     public ArticleDTO queryDetailArticleInfo(Long articleId) {
         ArticleDTO article = articleDao.queryArticleDetail(articleId);
