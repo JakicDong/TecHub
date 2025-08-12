@@ -11,8 +11,10 @@ import com.github.jakicdong.techub.api.model.vo.user.dto.UserStatisticInfoDTO;
 import com.github.jakicdong.techub.core.util.MarkdownConverter;
 import com.github.jakicdong.techub.core.util.SpringUtil;
 import com.github.jakicdong.techub.service.article.converter.PayConverter;
+import com.github.jakicdong.techub.service.article.repository.entity.ColumnArticleDO;
 import com.github.jakicdong.techub.service.article.service.ArticlePayService;
 import com.github.jakicdong.techub.service.article.service.ArticleReadService;
+import com.github.jakicdong.techub.service.article.service.ColumnService;
 import com.github.jakicdong.techub.service.comment.service.CommentReadService;
 import com.github.jakicdong.techub.service.sidebar.service.SidebarService;
 import com.github.jakicdong.techub.service.user.service.UserService;
@@ -64,14 +66,20 @@ public class ArticleViewController extends BaseViewController {
     private ArticlePayService articlePayService;
     @Autowired
     private SidebarService sidebarService;
-
+    @Autowired
+    private ColumnService columnService;
 
     @Autowired
     private ArticleReadViewServiceExtend articleReadViewServiceExtend;
 
     @GetMapping("detail/{articleId}")
     public String detail(@PathVariable(name = "articleId") Long articleId, Model model) throws IOException {
-        //todo 针对专栏文章做一个重定向
+
+        // 针对专栏文章，做一个重定向
+        ColumnArticleDO columnArticle = columnService.getColumnArticleRelation(articleId);
+        if (columnArticle != null) {
+            return String.format("redirect:/column/%d/%d", columnArticle.getColumnId(), columnArticle.getSection());
+        }
 
         ArticleDetailVo vo = new ArticleDetailVo();
         // 文章相关信息
