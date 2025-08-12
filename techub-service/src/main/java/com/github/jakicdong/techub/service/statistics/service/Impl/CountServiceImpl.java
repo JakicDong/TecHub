@@ -5,6 +5,7 @@ import com.github.jakicdong.techub.api.model.vo.user.dto.UserStatisticInfoDTO;
 import com.github.jakicdong.techub.service.article.repository.dao.ArticleDao;
 import com.github.jakicdong.techub.service.statistics.constants.CountConstants;
 import com.github.jakicdong.techub.service.statistics.service.CountService;
+import com.github.jakicdong.techub.service.user.repository.dao.UserFootDao;
 import org.springframework.stereotype.Service;
 import com.github.jakicdong.techub.core.cache.RedisClient;
 
@@ -14,6 +15,10 @@ import java.util.Map;
 @Service
 public class CountServiceImpl implements CountService {
 
+    private final UserFootDao userFootDao;
+    public CountServiceImpl (UserFootDao userFootDao) {
+        this.userFootDao = userFootDao;
+    }
     @Resource
     private ArticleDao articleDao;
 
@@ -58,6 +63,17 @@ public class CountServiceImpl implements CountService {
                 .add(CountConstants.USER_STATISTIC_INFO + authorUserId, CountConstants.READ_COUNT,
                         (connection, key, value) -> connection.hIncrBy(key, value, 1))
                 .execute();
+    }
+
+    /**
+     * 查询评论的点赞数
+     *
+     * @param commentId
+     * @return
+     */
+    @Override
+    public Long queryCommentPraiseCount(Long commentId) {
+        return userFootDao.countCommentPraise(commentId);
     }
 
 }

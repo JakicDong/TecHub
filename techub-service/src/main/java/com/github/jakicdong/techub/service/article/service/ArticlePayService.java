@@ -1,6 +1,10 @@
 package com.github.jakicdong.techub.service.article.service;
 
 
+import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
+
+import java.util.List;
+
 /*
 * @author JakicDong
 * @description
@@ -16,5 +20,14 @@ public interface ArticlePayService {
      * @return
      */
     boolean hasPayed(Long article, Long currentUerId);
+
+
+    /**
+     * 查询文章的打赏用户
+     *
+     * @param articleId 文章id
+     * @return
+     */
+    List<SimpleUserInfoDTO> queryPayUsers(Long articleId);
 
 }

@@ -7,9 +7,11 @@ import com.github.jakicdong.techub.api.model.vo.PageParam;
 import com.github.jakicdong.techub.service.comment.repository.eneity.CommentDO;
 import com.github.jakicdong.techub.service.comment.repository.mapper.CommentMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CommentDao extends ServiceImpl<CommentMapper, CommentDO> {
@@ -40,5 +42,15 @@ public class CommentDao extends ServiceImpl<CommentMapper, CommentDO> {
                 .in(CommentDO::getTopCommentId, topCommentIds)
                 .eq(CommentDO::getArticleId, articleId)
                 .eq(CommentDO::getDeleted, YesOrNoEnum.NO.getCode()).list();
+    }
+
+
+    public CommentDO getHotComment(Long articleId) {
+        Map<String, Object> map = baseMapper.getHotTopCommentId(articleId);
+        if (CollectionUtils.isEmpty(map)) {
+            return null;
+        }
+
+        return baseMapper.selectById(Long.parseLong(String.valueOf(map.get("top_comment_id"))));
     }
 }

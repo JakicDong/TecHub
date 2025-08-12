@@ -19,4 +19,13 @@ public interface SidebarService {
      */
     List<SideBarDTO> queryHomeSidebarList();
 
+    /**
+     * 查询文章详情的侧边栏信息
+     *
+     * @param author    文章作者id
+     * @param articleId 文章id
+     * @return
+     */
+    List<SideBarDTO> queryArticleDetailSidebarList(Long author, Long articleId);
+
 }

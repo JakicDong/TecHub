@@ -24,4 +24,12 @@ public interface CommentReadService {
      * @return
      */
     List<TopCommentDTO> getArticleComments(Long articleId, PageParam page);
+
+    /**
+     * 查询热门评论
+     *
+     * @param articleId
+     * @return
+     */
+    TopCommentDTO queryHotComment(Long articleId);
 }

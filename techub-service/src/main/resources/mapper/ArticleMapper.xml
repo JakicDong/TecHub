@@ -27,4 +27,15 @@
           and deleted = ${@com.github.jakicdong.techub.api.model.enums.YesOrNoEnum@NO.code}
         group by year
     </select>
+
+    <select id="listArticlesByUserIdOrderByReadCounts"
+            resultType="com.github.jakicdong.techub.api.model.vo.article.dto.SimpleArticleDTO">
+        select rc.document_id as id, a.title as title, a.create_time as createTime
+        from read_count as rc left join article as a on rc.document_id = a.id
+        where rc.document_type = ${@com.github.jakicdong.techub.api.model.enums.DocumentTypeEnum@ARTICLE.code}
+        and a.status = ${@com.github.jakicdong.techub.api.model.enums.PushStatusEnum@ONLINE.code}
+        and a.deleted = ${@com.github.jakicdong.techub.api.model.enums.YesOrNoEnum@NO.code} and a.user_id = #{userId} order
+        by rc.cnt desc
+        <include refid="limit"/>
+    </select>
 </mapper>

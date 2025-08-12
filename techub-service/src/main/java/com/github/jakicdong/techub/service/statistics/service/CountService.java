@@ -37,4 +37,12 @@ public interface CountService {
     void incrArticleReadCount(Long authorUserId, Long articleId);
 
 
+    /**
+     * 获取评论点赞数量
+     *
+     * @param commentId
+     * @return
+     */
+    Long queryCommentPraiseCount(Long commentId);
+
 }

@@ -4,6 +4,8 @@ package com.github.jakicdong.techub.service.user.repository.dao;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.jakicdong.techub.api.model.enums.DocumentTypeEnum;
+import com.github.jakicdong.techub.api.model.enums.PraiseStatEnum;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
@@ -35,6 +37,16 @@ public class UserFootDao extends ServiceImpl<UserFootMapper, UserFootDO> {
 
     public List<SimpleUserInfoDTO> listDocumentPraisedUsers(Long documentId, Integer type, int size) {
         return baseMapper.listSimpleUserInfosByArticleId(documentId, type, size);
+    }
+
+    //查询评论的点赞数量
+    public Long countCommentPraise(Long commentId){
+        return lambdaQuery()
+                .eq(UserFootDO::getDocumentId, commentId)
+                .eq(UserFootDO::getDocumentType, DocumentTypeEnum.COMMENT.getCode())
+                .eq(UserFootDO::getPraiseStat, PraiseStatEnum.PRAISE.getCode())
+                .count();
+
     }
 
 

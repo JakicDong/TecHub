@@ -177,6 +177,17 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
     }
 
 
+    /**
+     * 作者的热门文章推荐，适用于作者的详情页侧边栏
+     *
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    public List<SimpleArticleDTO> listAuthorHotArticles(long userId, PageParam pageParam) {
+        return baseMapper.listArticlesByUserIdOrderByReadCounts(userId, pageParam);
+    }
+
 
 
 

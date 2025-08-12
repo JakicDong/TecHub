@@ -87,36 +87,36 @@ public class ArticleViewController extends BaseViewController {
         List<TopCommentDTO> comments = commentService.getArticleComments(articleId, PageParam.newPageInstance(1L, 10L));
         vo.setComments(comments);
 
-//        // 热门评论
-//        TopCommentDTO hotComment = commentService.queryHotComment(articleId);
-//        vo.setHotComment(hotComment);
-//
-//
-//        // 作者信息
-//        UserStatisticInfoDTO user = userService.queryUserInfoWithStatistic(articleDTO.getAuthor());
-//        articleDTO.setAuthorName(user.getUserName());
-//        articleDTO.setAuthorAvatar(user.getPhoto());
-//        if (articleDTO.getReadType().equals(ArticleReadTypeEnum.PAY_READ.getType())) {
-//            // 付费阅读的文章，构建收款码信息
-//            user.setPayQrCodes(PayConverter.formatPayCodeInfo(user.getPayCode()));
-//        }
-//        vo.setAuthor(user);
-//
-//        // 其他信息封装
-//        ArticleOtherDTO other = new ArticleOtherDTO();
-//        other.setReadType(articleDTO.getReadType());
-//        vo.setOther(other);
-//
-//        // 打赏用户列表
-//        if (Objects.equals(articleDTO.getReadType(), ArticleReadTypeEnum.PAY_READ.getType())) {
-//            vo.setPayUsers(articlePayService.queryPayUsers(articleId));
-//        } else {
-//            vo.setPayUsers(Collections.emptyList());
-//        }
-//
-//        // 详情页的侧边推荐信息
-//        List<SideBarDTO> sideBars = sidebarService.queryArticleDetailSidebarList(articleDTO.getAuthor(), articleDTO.getArticleId());
-//        vo.setSideBarItems(sideBars);
+        // 热门评论
+        TopCommentDTO hotComment = commentService.queryHotComment(articleId);
+        vo.setHotComment(hotComment);
+
+
+        // 作者信息
+        UserStatisticInfoDTO user = userService.queryUserInfoWithStatistic(articleDTO.getAuthor());
+        articleDTO.setAuthorName(user.getUserName());
+        articleDTO.setAuthorAvatar(user.getPhoto());
+        if (articleDTO.getReadType().equals(ArticleReadTypeEnum.PAY_READ.getType())) {
+            // 付费阅读的文章，构建收款码信息
+            user.setPayQrCodes(PayConverter.formatPayCodeInfo(user.getPayCode()));
+        }
+        vo.setAuthor(user);
+
+        // 其他信息封装
+        ArticleOtherDTO other = new ArticleOtherDTO();
+        other.setReadType(articleDTO.getReadType());
+        vo.setOther(other);
+
+        // 打赏用户列表
+        if (Objects.equals(articleDTO.getReadType(), ArticleReadTypeEnum.PAY_READ.getType())) {
+            vo.setPayUsers(articlePayService.queryPayUsers(articleId));
+        } else {
+            vo.setPayUsers(Collections.emptyList());
+        }
+
+        // 详情页的侧边推荐信息
+        List<SideBarDTO> sideBars = sidebarService.queryArticleDetailSidebarList(articleDTO.getAuthor(), articleDTO.getArticleId());
+        vo.setSideBarItems(sideBars);
 
 
         model.addAttribute("vo", vo);

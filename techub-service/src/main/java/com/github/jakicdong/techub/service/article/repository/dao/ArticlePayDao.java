@@ -1,12 +1,14 @@
 package com.github.jakicdong.techub.service.article.repository.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.jakicdong.techub.api.model.enums.pay.PayStatusEnum;
 import com.github.jakicdong.techub.service.article.repository.entity.ArticlePayRecordDO;
 import com.github.jakicdong.techub.service.article.repository.mapper.ArticlePayRecordMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
 * @author JakicDong
@@ -32,6 +34,20 @@ public class ArticlePayDao extends ServiceImpl<ArticlePayRecordMapper, ArticlePa
             return null;
         }
         return list.get(0);
+    }
+
+    /**
+     * 查询文章成功支付的用户id
+     *
+     * @param articleId 文章id
+     * @return
+     */
+    public List<Long> querySucceedPayUsersByArticleId(Long articleId) {
+        List<ArticlePayRecordDO> records = lambdaQuery().select(ArticlePayRecordDO::getPayUserId)
+                .eq(ArticlePayRecordDO::getArticleId, articleId)
+                .eq(ArticlePayRecordDO::getPayStatus, PayStatusEnum.SUCCEED.getStatus())
+                .list();
+        return records.stream().map(ArticlePayRecordDO::getPayUserId).collect(Collectors.toList());
     }
 
 }

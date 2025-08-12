@@ -8,8 +8,11 @@ import com.github.jakicdong.techub.api.model.vo.PageParam;
 import com.github.jakicdong.techub.api.model.vo.article.dto.SimpleArticleDTO;
 import com.github.jakicdong.techub.api.model.vo.banner.dto.ConfigDTO;
 import com.github.jakicdong.techub.api.model.vo.rank.dto.RankItemDTO;
+import com.github.jakicdong.techub.api.model.vo.recommend.RateVisitDTO;
 import com.github.jakicdong.techub.api.model.vo.recommend.SideBarDTO;
 import com.github.jakicdong.techub.api.model.vo.recommend.SideBarItemDTO;
+import com.github.jakicdong.techub.core.util.JsonUtil;
+import com.github.jakicdong.techub.core.util.SpringUtil;
 import com.github.jakicdong.techub.service.article.repository.dao.ArticleDao;
 import com.github.jakicdong.techub.service.article.service.ArticleReadService;
 import com.github.jakicdong.techub.service.config.service.ConfigService;
@@ -154,6 +157,71 @@ public class SidebarServiceImpl implements SidebarService {
         }
         sidebar.setItems(itemList);
         return sidebar;
+    }
+
+
+    /**
+     * 以用户 + 文章维度进行缓存设置
+     *
+     * @param author    文章作者id
+     * @param articleId 文章id
+     * @return
+     */
+    @Override
+    @Cacheable(key = "'sideBar_' + #articleId", cacheManager = "caffeineCacheManager", cacheNames = "article")
+    public List<SideBarDTO> queryArticleDetailSidebarList(Long author, Long articleId) {
+        List<SideBarDTO> list = new ArrayList<>(2);
+        // 不能直接使用 pdfSideBar()的方式调用，会导致缓存不生效
+        list.add(SpringUtil.getBean(SidebarServiceImpl.class).pdfSideBar());
+        list.add(recommendByAuthor(author, articleId, PageParam.DEFAULT_PAGE_SIZE));
+        return list;
+    }
+
+
+    /**
+     * 作者的文章列表推荐
+     *
+     * @param authorId
+     * @param size
+     * @return
+     */
+    public SideBarDTO recommendByAuthor(Long authorId, Long articleId, long size) {
+        List<SimpleArticleDTO> list = articleDao.listAuthorHotArticles(authorId, PageParam.newPageInstance(PageParam.DEFAULT_PAGE_NUM, size));
+        List<SideBarItemDTO> items = list.stream().filter(s -> !s.getId().equals(articleId))
+                .map(s -> new SideBarItemDTO()
+                        .setTitle(s.getTitle()).setUrl("/article/detail/" + s.getId())
+                        .setTime(s.getCreateTime().getTime()))
+                .collect(Collectors.toList());
+        return new SideBarDTO().setTitle("相关文章").setItems(items).setStyle(SidebarStyleEnum.ARTICLES.getStyle());
+    }
+
+    /**
+     * PDF 优质资源
+     *
+     * @return
+     */
+    @Cacheable(key = "'sideBar'", cacheManager = "caffeineCacheManager", cacheNames = "article")
+    public SideBarDTO pdfSideBar() {
+        List<ConfigDTO> pdfList = configService.getConfigList(ConfigTypeEnum.PDF);
+        List<SideBarItemDTO> items = new ArrayList<>(pdfList.size());
+        pdfList.forEach(configDTO -> {
+            SideBarItemDTO dto = new SideBarItemDTO();
+            dto.setName(configDTO.getName());
+            dto.setUrl(configDTO.getJumpUrl());
+            dto.setImg(configDTO.getBannerUrl());
+            RateVisitDTO visit;
+            if (StringUtils.isNotBlank(configDTO.getExtra())) {
+                visit = (JsonUtil.toObj(configDTO.getExtra(), RateVisitDTO.class));
+            } else {
+                visit = new RateVisitDTO();
+            }
+            visit.incrVisit();
+            // 更新阅读计数
+            configService.updateVisit(configDTO.getId(), JsonUtil.toStr(visit));
+            dto.setVisit(visit);
+            items.add(dto);
+        });
+        return new SideBarDTO().setTitle("优质PDF").setItems(items).setStyle(SidebarStyleEnum.PDF.getStyle());
     }
 
 }

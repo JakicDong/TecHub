@@ -20,4 +20,15 @@ public class ConfigServiceImpl implements ConfigService {
 
     }
 
+    /**
+     * 配置发生变更之后，失效本地缓存，这里主要是配合 SidebarServiceImpl 中的缓存使用
+     *
+     * @param configId
+     * @param extra
+     */
+    @Override
+    public void updateVisit(long configId, String extra) {
+        configDao.updatePdfConfigVisitNum(configId, extra);
+    }
+
 }

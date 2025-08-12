@@ -32,4 +32,14 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
      */
     List<YearArticleDTO> listYearArticleByUserId(@Param("userId") Long userId);
 
+
+    /**
+     * 查询作者的热门文章
+     *
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    List<SimpleArticleDTO> listArticlesByUserIdOrderByReadCounts(@Param("userId") Long userId, @Param("pageParam") PageParam pageParam);
+
 }
