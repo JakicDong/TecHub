@@ -1,7 +1,7 @@
 target/
 
 /techub-web/src/main/resources/application-email.yml
-
+/techub-web/src/main/resources-env/dev/application-dal.yml
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
