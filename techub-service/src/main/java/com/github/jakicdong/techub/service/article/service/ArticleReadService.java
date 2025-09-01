@@ -82,5 +82,13 @@ public interface ArticleReadService {
      */
     ArticleDTO queryDetailArticleInfo(Long articleId);
 
+    /**
+     * 查询基础的文章信息
+     *
+     * @param articleId
+     * @return
+     */
+    ArticleDO queryBasicArticle(Long articleId);
+
 
 }

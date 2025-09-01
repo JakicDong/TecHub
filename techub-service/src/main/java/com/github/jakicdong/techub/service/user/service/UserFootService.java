@@ -51,4 +51,16 @@ public interface UserFootService {
      */
     UserFootDO queryUserFoot(Long documentId, Integer type, Long userId);
 
+    /**
+     * 文章/评论点赞、取消点赞、收藏、取消收藏
+     *
+     * @param documentType    文档类型：博文 + 评论
+     * @param documentId      文档id
+     * @param authorId        作者
+     * @param userId          操作人
+     * @param operateTypeEnum 操作类型：点赞，评论，收藏等
+     */
+    void favorArticleComment(DocumentTypeEnum documentType, Long documentId, Long authorId, Long userId, OperateTypeEnum operateTypeEnum);
+
+
 }

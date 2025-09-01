@@ -177,4 +177,12 @@ public class ArticleReadServiceImpl implements ArticleReadService {
         article.setTags(articleTagDao.queryArticleTagDetails(articleId));
         return article;
     }
+
+
+    @Override
+    public ArticleDO queryBasicArticle(Long articleId) {
+        return articleDao.getById(articleId);
+    }
+
+
 }
