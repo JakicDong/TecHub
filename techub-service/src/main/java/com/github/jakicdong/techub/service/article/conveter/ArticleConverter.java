@@ -1,4 +1,4 @@
-package com.github.jakicdong.techub.service.article.converter;
+package com.github.jakicdong.techub.service.article.conveter;
 
 import com.github.jakicdong.techub.api.model.enums.SourceTypeEnum;
 import com.github.jakicdong.techub.api.model.vo.article.dto.ArticleDTO;

@@ -3,7 +3,7 @@ package com.github.jakicdong.techub.service.article.service.impl;
 
 import com.github.jakicdong.techub.api.model.enums.YesOrNoEnum;
 import com.github.jakicdong.techub.api.model.vo.article.dto.CategoryDTO;
-import com.github.jakicdong.techub.service.article.converter.ArticleConverter;
+import com.github.jakicdong.techub.service.article.conveter.ArticleConverter;
 import com.github.jakicdong.techub.service.article.repository.dao.CategoryDao;
 import com.github.jakicdong.techub.service.article.repository.entity.CategoryDO;
 import com.github.jakicdong.techub.service.article.service.CategoryService;

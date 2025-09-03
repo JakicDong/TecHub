@@ -9,7 +9,7 @@ import com.github.jakicdong.techub.api.model.vo.article.dto.CategoryDTO;
 import com.github.jakicdong.techub.api.model.vo.article.dto.SimpleArticleDTO;
 import com.github.jakicdong.techub.api.model.vo.constants.StatusEnum;
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
-import com.github.jakicdong.techub.service.article.converter.ArticleConverter;
+import com.github.jakicdong.techub.service.article.conveter.ArticleConverter;
 import com.github.jakicdong.techub.service.article.repository.dao.ArticleDao;
 import com.github.jakicdong.techub.service.article.repository.dao.ArticleTagDao;
 import com.github.jakicdong.techub.service.article.repository.entity.ArticleDO;
@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

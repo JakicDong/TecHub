@@ -11,7 +11,7 @@ import com.github.jakicdong.techub.service.article.repository.entity.ArticleDO;
 import com.github.jakicdong.techub.service.article.service.ArticleReadService;
 import com.github.jakicdong.techub.service.comment.converter.CommentConverter;
 import com.github.jakicdong.techub.service.comment.repository.dao.CommentDao;
-import com.github.jakicdong.techub.service.comment.repository.eneity.CommentDO;
+import com.github.jakicdong.techub.service.comment.repository.entity.CommentDO;
 import com.github.jakicdong.techub.service.comment.service.CommentWriteService;
 import com.github.jakicdong.techub.service.user.service.UserFootService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,10 +40,11 @@ public class CommentWriteServiceImpl implements CommentWriteService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long saveComment(CommentSaveReq commentSaveReq) {
-        CommentDO comment = new CommentDO();
-        if(NumUtil.nullOrZero(commentSaveReq.getCommentId())){
+        // 保存评论
+        CommentDO comment;
+        if (NumUtil.nullOrZero(commentSaveReq.getCommentId())) {
             comment = addComment(commentSaveReq);
-        }else{
+        } else {
             comment = updateComment(commentSaveReq);
         }
         return comment.getId();
@@ -54,6 +55,7 @@ public class CommentWriteServiceImpl implements CommentWriteService {
     * @time 2025/9/3 11:59
     */
     private CommentDO addComment(CommentSaveReq commentSaveReq){
+        //我的
         // 0.获取父评论信息，校验是否存在
         CommentDO parentComment = getParentCommentUser(commentSaveReq.getParentCommentId());
         Long parentUser = parentComment == null ? null : parentComment.getUserId();
@@ -77,7 +79,7 @@ public class CommentWriteServiceImpl implements CommentWriteService {
 
         // 4. 发布添加/回复评论事件
         SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.COMMENT,commentDO));
-        if(NumUtil.nullOrZero(parentComment.getId())){
+        if(NumUtil.nullOrZero(parentUser)){
             //评论回复事件
             SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.REPLY,commentDO));
         }

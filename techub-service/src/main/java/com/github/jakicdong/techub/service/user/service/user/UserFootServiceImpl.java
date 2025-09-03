@@ -6,14 +6,11 @@ import com.github.jakicdong.techub.api.model.enums.NotifyTypeEnum;
 import com.github.jakicdong.techub.api.model.enums.OperateTypeEnum;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
-import com.github.jakicdong.techub.service.comment.repository.eneity.CommentDO;
+import com.github.jakicdong.techub.service.comment.repository.entity.CommentDO;
 import com.github.jakicdong.techub.service.notify.help.MsgNotifyHelper;
 import com.github.jakicdong.techub.service.user.repository.dao.UserFootDao;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
 import com.github.jakicdong.techub.service.user.service.UserFootService;
-import com.rabbitmq.client.BuiltinExchangeType;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

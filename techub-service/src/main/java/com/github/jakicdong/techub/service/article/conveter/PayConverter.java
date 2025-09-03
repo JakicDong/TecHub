@@ -1,4 +1,4 @@
-package com.github.jakicdong.techub.service.article.converter;
+package com.github.jakicdong.techub.service.article.conveter;
 
 
 import com.fasterxml.jackson.databind.JsonNode;

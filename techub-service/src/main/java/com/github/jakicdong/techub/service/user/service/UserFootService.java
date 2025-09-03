@@ -10,7 +10,7 @@ import com.github.jakicdong.techub.api.model.enums.DocumentTypeEnum;
 import com.github.jakicdong.techub.api.model.enums.OperateTypeEnum;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
-import com.github.jakicdong.techub.service.comment.repository.eneity.CommentDO;
+import com.github.jakicdong.techub.service.comment.repository.entity.CommentDO;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
 
 import java.util.List;

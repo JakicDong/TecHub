@@ -1,15 +1,16 @@
-package com.github.jakicdong.techub.service.comment.repository.eneity;
-
+package com.github.jakicdong.techub.service.article.repository.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.jakicdong.techub.api.model.entity.BaseDO;
 import com.github.jakicdong.techub.core.senstive.ano.SensitiveField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+
 /*
 * @author JakicDong
 * @description 评论表
-* @time 2025/8/11 19:46
+* @time 2025/9/3 15:01
 */
 @Data
 @EqualsAndHashCode(callSuper = true)

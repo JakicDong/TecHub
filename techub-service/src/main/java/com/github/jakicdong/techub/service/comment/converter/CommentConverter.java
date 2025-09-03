@@ -4,7 +4,7 @@ import com.github.jakicdong.techub.api.model.vo.comment.CommentSaveReq;
 import com.github.jakicdong.techub.api.model.vo.comment.dto.BaseCommentDTO;
 import com.github.jakicdong.techub.api.model.vo.comment.dto.SubCommentDTO;
 import com.github.jakicdong.techub.api.model.vo.comment.dto.TopCommentDTO;
-import com.github.jakicdong.techub.service.comment.repository.eneity.CommentDO;
+import com.github.jakicdong.techub.service.comment.repository.entity.CommentDO;
 
 import java.util.ArrayList;
 

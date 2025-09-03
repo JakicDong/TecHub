@@ -12,7 +12,7 @@ import com.github.jakicdong.techub.api.model.vo.comment.dto.TopCommentDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
 import com.github.jakicdong.techub.service.comment.converter.CommentConverter;
 import com.github.jakicdong.techub.service.comment.repository.dao.CommentDao;
-import com.github.jakicdong.techub.service.comment.repository.eneity.CommentDO;
+import com.github.jakicdong.techub.service.comment.repository.entity.CommentDO;
 import com.github.jakicdong.techub.service.comment.service.CommentReadService;
 import com.github.jakicdong.techub.service.statistics.service.CountService;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;

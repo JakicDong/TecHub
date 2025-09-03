@@ -10,7 +10,7 @@ import com.github.jakicdong.techub.api.model.vo.recommend.SideBarDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserStatisticInfoDTO;
 import com.github.jakicdong.techub.core.util.MarkdownConverter;
 import com.github.jakicdong.techub.core.util.SpringUtil;
-import com.github.jakicdong.techub.service.article.converter.PayConverter;
+import com.github.jakicdong.techub.service.article.conveter.PayConverter;
 import com.github.jakicdong.techub.service.article.repository.entity.ColumnArticleDO;
 import com.github.jakicdong.techub.service.article.service.ArticlePayService;
 import com.github.jakicdong.techub.service.article.service.ArticleReadService;

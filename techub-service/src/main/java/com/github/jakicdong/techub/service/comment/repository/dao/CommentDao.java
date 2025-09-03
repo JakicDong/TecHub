@@ -4,7 +4,7 @@ package com.github.jakicdong.techub.service.comment.repository.dao;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.jakicdong.techub.api.model.enums.YesOrNoEnum;
 import com.github.jakicdong.techub.api.model.vo.PageParam;
-import com.github.jakicdong.techub.service.comment.repository.eneity.CommentDO;
+import com.github.jakicdong.techub.service.comment.repository.entity.CommentDO;
 import com.github.jakicdong.techub.service.comment.repository.mapper.CommentMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;

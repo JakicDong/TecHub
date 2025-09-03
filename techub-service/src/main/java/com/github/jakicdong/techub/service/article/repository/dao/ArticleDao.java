@@ -16,7 +16,7 @@ import com.github.jakicdong.techub.api.model.vo.article.dto.SimpleArticleDTO;
 import com.github.jakicdong.techub.api.model.vo.article.dto.YearArticleDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
 import com.github.jakicdong.techub.core.permission.UserRole;
-import com.github.jakicdong.techub.service.article.converter.ArticleConverter;
+import com.github.jakicdong.techub.service.article.conveter.ArticleConverter;
 import com.github.jakicdong.techub.service.article.repository.entity.ArticleDO;
 import com.github.jakicdong.techub.service.article.repository.entity.ArticleDetailDO;
 import com.github.jakicdong.techub.service.article.repository.entity.ReadCountDO;
