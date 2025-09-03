@@ -28,4 +28,11 @@ public interface SidebarService {
      */
     List<SideBarDTO> queryArticleDetailSidebarList(Long author, Long articleId);
 
+    /**
+     * 查询教程的侧边栏信息
+     *
+     * @return
+     */
+    List<SideBarDTO> queryColumnSidebarList();
+
 }

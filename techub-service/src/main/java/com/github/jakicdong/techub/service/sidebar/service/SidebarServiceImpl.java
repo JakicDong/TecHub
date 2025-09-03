@@ -224,4 +224,29 @@ public class SidebarServiceImpl implements SidebarService {
         return new SideBarDTO().setTitle("优质PDF").setItems(items).setStyle(SidebarStyleEnum.PDF.getStyle());
     }
 
+    /**
+     * 查询教程的侧边栏信息
+     *
+     * @return
+     */
+    @Override
+    @Cacheable(key = "'columnSidebar'", cacheManager = "caffeineCacheManager", cacheNames = "column")
+    public List<SideBarDTO> queryColumnSidebarList() {
+        List<SideBarDTO> list = new ArrayList<>();
+        list.add(subscribeSideBar());
+        return list;
+    }
+
+    /**
+     * 订阅公众号
+     *
+     * @return
+     */
+    private SideBarDTO subscribeSideBar() {
+        return new SideBarDTO().setTitle("订阅").setSubTitle("JakicDong")
+                .setImg("1.jpg")
+                .setContent("JakicDong个人博客:https://jakicdong.github.io/")
+                .setStyle(SidebarStyleEnum.SUBSCRIBE.getStyle());
+    }
+
 }
