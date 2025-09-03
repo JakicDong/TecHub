@@ -75,11 +75,11 @@ public class ArticleViewController extends BaseViewController {
     @GetMapping("detail/{articleId}")
     public String detail(@PathVariable(name = "articleId") Long articleId, Model model) throws IOException {
 
-//        // 针对专栏文章，做一个重定向
-//        ColumnArticleDO columnArticle = columnService.getColumnArticleRelation(articleId);
-//        if (columnArticle != null) {
-//            return String.format("redirect:/column/%d/%d", columnArticle.getColumnId(), columnArticle.getSection());
-//        }
+        // 针对专栏文章，做一个重定向
+        ColumnArticleDO columnArticle = columnService.getColumnArticleRelation(articleId);
+        if (columnArticle != null) {
+            return String.format("redirect:/column/%d/%d", columnArticle.getColumnId(), columnArticle.getSection());
+        }
         //创建文章详情VO(包含多个模块的DTO)
         ArticleDetailVo vo = new ArticleDetailVo();
 
