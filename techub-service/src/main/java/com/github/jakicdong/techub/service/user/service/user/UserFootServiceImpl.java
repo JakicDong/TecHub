@@ -6,6 +6,7 @@ import com.github.jakicdong.techub.api.model.enums.NotifyTypeEnum;
 import com.github.jakicdong.techub.api.model.enums.OperateTypeEnum;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
+import com.github.jakicdong.techub.service.comment.repository.eneity.CommentDO;
 import com.github.jakicdong.techub.service.notify.help.MsgNotifyHelper;
 import com.github.jakicdong.techub.service.user.repository.dao.UserFootDao;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
@@ -189,6 +190,17 @@ public class UserFootServiceImpl implements UserFootService {
 //        }
     }
 
+    @Override
+    public void saveCommentFoot(CommentDO comment, Long articleAuthor, Long parentCommentAuthor) {
+
+        //保存文章对应的评论足迹
+        saveOrUpdateUserFoot(DocumentTypeEnum.ARTICLE , comment.getArticleId() , articleAuthor, comment.getUserId(),OperateTypeEnum.COMMENT);
+        // 如果是子评论，则找到父评论的记录，然后设置为已评
+        if(comment.getParentCommentId() == null || comment.getParentCommentId() == 0){
+            // 如果需要展示父评论的子评论数量，authorId 需要传父评论的 userId
+            saveOrUpdateUserFoot(DocumentTypeEnum.COMMENT , comment.getParentCommentId() ,  parentCommentAuthor , comment.getUserId() , OperateTypeEnum.COMMENT);
+        }
+    }
 
 
 }

@@ -59,7 +59,7 @@ public class ReqRecordFilter implements Filter{
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 //        log.info("-------------------ReqRecordFilter的doFilter开始1------------------");
-        log.info("请求路径：{}", ((HttpServletRequest) servletRequest).getRequestURI());
+//        log.info("请求路径：{}", ((HttpServletRequest) servletRequest).getRequestURI());
 
         long start = System.currentTimeMillis();
         HttpServletRequest request = null;

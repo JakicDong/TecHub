@@ -10,6 +10,7 @@ import com.github.jakicdong.techub.api.model.enums.DocumentTypeEnum;
 import com.github.jakicdong.techub.api.model.enums.OperateTypeEnum;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
+import com.github.jakicdong.techub.service.comment.repository.eneity.CommentDO;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
 
 import java.util.List;
@@ -63,4 +64,40 @@ public interface UserFootService {
     void favorArticleComment(DocumentTypeEnum documentType, Long documentId, Long authorId, Long userId, OperateTypeEnum operateTypeEnum);
 
 
+    /**
+     * 保存评论足迹
+     * 1. 用户文章记录上，设置为已评论
+     * 2. 若改评论为回复别人的评论，则针对父评论设置为已评论
+     *
+     * @param comment             保存评论入参
+     * @param articleAuthor       文章作者
+     * @param parentCommentAuthor 父评论作者
+     */
+    void saveCommentFoot(CommentDO comment,Long articleAuthor,Long parentCommentAuthor);
+
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

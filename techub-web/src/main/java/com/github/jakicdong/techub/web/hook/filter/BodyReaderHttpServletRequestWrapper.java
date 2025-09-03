@@ -21,15 +21,20 @@ import java.util.List;
 * @time 2025/7/15 15:29
 */
 public class BodyReaderHttpServletRequestWrapper  extends HttpServletRequestWrapper {
+    //需要缓存的请求方法
     private static final List<String> POST_METHOD = Arrays.asList("POST", "PUT");
+    //日志器
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    //请求体
     private final byte[] body;
+    //请求体字符串
     private final String bodyString;
 
+    //构造函数
     public BodyReaderHttpServletRequestWrapper(HttpServletRequest request) {
+        //调用父类的构造器
         super(request);
-        //如果是POST PUT请求，并且不是文件上传，并且不是二进制流，并且不是表单提交，那么就获取请求体
+        //如果
         if (POST_METHOD.contains(request.getMethod()) && !isMultipart(request) && !isBinaryContent(request) && !isFormPost(request)) {
             bodyString = getBodyString(request);
             body = bodyString.getBytes(StandardCharsets.UTF_8);
@@ -39,7 +44,6 @@ public class BodyReaderHttpServletRequestWrapper  extends HttpServletRequestWrap
         }
     }
 
-    //重写getReader方法，返回一个 BufferedReader 对象，该对象可以读取请求体中的数据
     @Override
     public BufferedReader getReader() throws IOException {
         return new BufferedReader(new InputStreamReader(getInputStream()));
@@ -135,12 +139,4 @@ public class BodyReaderHttpServletRequestWrapper  extends HttpServletRequestWrap
     private boolean isFormPost(final HttpServletRequest request) {
         return request.getContentType() != null && request.getContentType().startsWith("application/x-www-form-urlencoded");
     }
-
-
-
-
-
-
-
-
 }
