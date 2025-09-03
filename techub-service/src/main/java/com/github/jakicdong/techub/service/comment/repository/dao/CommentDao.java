@@ -50,7 +50,6 @@ public class CommentDao extends ServiceImpl<CommentMapper, CommentDO> {
         if (CollectionUtils.isEmpty(map)) {
             return null;
         }
-
         return baseMapper.selectById(Long.parseLong(String.valueOf(map.get("top_comment_id"))));
     }
 }

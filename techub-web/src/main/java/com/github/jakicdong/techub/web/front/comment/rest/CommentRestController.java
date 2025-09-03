@@ -103,6 +103,18 @@ public class CommentRestController {
         String content = templateEngineHelper.render("views/article-detail/comment/index", vo);
         return ResVo.ok(content);
     }
+    /**
+     * 删除评论
+     *
+     * @param commentId
+     * @return
+     */
+    @Permission(role = UserRole.LOGIN)
+    @RequestMapping(path = "delete")
+    public ResVo<Boolean> delete(Long commentId) {
+        commentWriteService.deleteComment(commentId, ReqInfoContext.getReqInfo().getUserId());
+        return ResVo.ok(true);
+    }
 
 
 

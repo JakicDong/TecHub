@@ -76,6 +76,16 @@ public interface UserFootService {
     void saveCommentFoot(CommentDO comment,Long articleAuthor,Long parentCommentAuthor);
 
 
+    /**
+     * 删除评论足迹
+     *
+     * @param comment             保存评论入参
+     * @param articleAuthor       文章作者
+     * @param parentCommentAuthor 父评论作者
+     */
+    void removeCommentFoot(CommentDO comment, Long articleAuthor, Long parentCommentAuthor);
+
+    
 
 
 

@@ -1,6 +1,7 @@
 package com.github.jakicdong.techub.service.comment.service.impl;
 
 import com.github.jakicdong.techub.api.model.enums.NotifyTypeEnum;
+import com.github.jakicdong.techub.api.model.enums.YesOrNoEnum;
 import com.github.jakicdong.techub.api.model.exception.ExceptionUtil;
 import com.github.jakicdong.techub.api.model.vo.comment.CommentSaveReq;
 import com.github.jakicdong.techub.api.model.vo.constants.StatusEnum;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -49,6 +51,38 @@ public class CommentWriteServiceImpl implements CommentWriteService {
         }
         return comment.getId();
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteComment(Long commentId, Long userId) {
+        CommentDO commentDO = commentDao.getById(commentId);//先获取这个评论
+        // 1.校验评论，是否越权，文章是否存在
+        if(commentDO == null){
+            throw ExceptionUtil.of(StatusEnum.COMMENT_NOT_EXISTS, "评论ID=" + commentId);
+        }
+        if (!Objects.equals(commentDO.getUserId(), userId)) {
+            throw ExceptionUtil.of(StatusEnum.FORBID_ERROR_MIXED, "无权删除评论");
+        }
+        // 获取文章信息
+        ArticleDO article = articleReadService.queryBasicArticle(commentDO.getArticleId());
+        if (article == null) {
+            throw ExceptionUtil.of(StatusEnum.ARTICLE_NOT_EXISTS, commentDO.getArticleId());
+        }
+
+        // 2.删除评论、足迹
+        commentDO.setDeleted(YesOrNoEnum.YES.getCode());
+        commentDao.updateById(commentDO);
+        CommentDO parentComment = getParentCommentUser(commentDO.getParentCommentId());
+        userFootService.removeCommentFoot(commentDO, article.getUserId(), parentComment == null ? null : parentComment.getUserId());
+
+        // 3. 发布删除评论事件
+        SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.DELETE_COMMENT, commentDO));
+        if (NumUtil.upZero(commentDO.getParentCommentId())) {
+            // 评论
+            SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.DELETE_REPLY, commentDO));
+        }
+    }
+
     /*
     * @author JakicDong
     * @description 添加评论

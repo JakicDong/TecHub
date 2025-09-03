@@ -16,4 +16,12 @@ public interface CommentWriteService {
      * @return
      */
     Long saveComment (CommentSaveReq commentSaveReq);
+
+    /**
+     * 删除评论
+     *
+     * @param commentId
+     * @throws Exception
+     */
+    void deleteComment(Long commentId, Long userId);
 }

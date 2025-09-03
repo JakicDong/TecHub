@@ -199,5 +199,14 @@ public class UserFootServiceImpl implements UserFootService {
         }
     }
 
+    @Override
+    public void removeCommentFoot(CommentDO comment, Long articleAuthor, Long parentCommentAuthor) {
+        saveOrUpdateUserFoot(DocumentTypeEnum.ARTICLE, comment.getArticleId(), articleAuthor, comment.getUserId(), OperateTypeEnum.DELETE_COMMENT);
+        if (comment.getParentCommentId() != null) {
+            // 如果需要展示父评论的子评论数量，authorId 需要传父评论的 userId
+            saveOrUpdateUserFoot(DocumentTypeEnum.COMMENT, comment.getParentCommentId(), parentCommentAuthor, comment.getUserId(), OperateTypeEnum.DELETE_COMMENT);
+        }
+    }
+
 
 }
