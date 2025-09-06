@@ -1,8 +1,11 @@
 package com.github.jakicdong.techub.service.article.service.impl;
 
+import com.github.jakicdong.techub.api.model.exception.ExceptionUtil;
 import com.github.jakicdong.techub.api.model.vo.PageListVo;
 import com.github.jakicdong.techub.api.model.vo.PageParam;
 import com.github.jakicdong.techub.api.model.vo.article.dto.ColumnDTO;
+import com.github.jakicdong.techub.api.model.vo.article.dto.SimpleArticleDTO;
+import com.github.jakicdong.techub.api.model.vo.constants.StatusEnum;
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.ColumnFootCountDTO;
 import com.github.jakicdong.techub.service.article.conveter.ColumnConvert;
@@ -82,6 +85,62 @@ public class ColumnServiceImpl implements ColumnService {
         dto.setCount(countDTO);
         return dto;
     }
+
+    @Override
+    public ColumnDTO queryColumnInfo(Long columnId) {
+        return buildColumnInfo(queryBasicColumnInfo(columnId));
+    }
+
+    @Override
+    public ColumnDTO queryBasicColumnInfo(Long columnId) {
+        // 查找专栏信息
+        ColumnInfoDO column = columnDao.getById(columnId);
+        if (column == null) {
+            throw ExceptionUtil.of(StatusEnum.COLUMN_NOT_EXISTS, columnId);
+        }
+        return ColumnConvert.toDto(column);
+    }
+
+    @Override
+    public ColumnArticleDO queryColumnArticle(Long columnId, Integer order) {
+        // 查找专栏信息
+        ColumnArticleDO article = columnDao.getColumnArticleId(columnId, order);
+        if (article == null) {
+            throw ExceptionUtil.of(StatusEnum.COLUMN_NOT_EXISTS, columnId);
+        }
+        return article;
+    }
+
+    @Override
+    public List<SimpleArticleDTO> queryColumnArticles(Long columnId){
+        return columnDao.listColumnArticles(columnId);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

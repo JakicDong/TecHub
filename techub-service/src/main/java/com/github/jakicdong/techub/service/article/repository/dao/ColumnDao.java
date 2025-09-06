@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.jakicdong.techub.api.model.enums.column.ColumnStatusEnum;
 import com.github.jakicdong.techub.api.model.vo.PageParam;
+import com.github.jakicdong.techub.api.model.vo.article.dto.SimpleArticleDTO;
 import com.github.jakicdong.techub.service.article.repository.entity.ColumnArticleDO;
 import com.github.jakicdong.techub.service.article.repository.entity.ColumnInfoDO;
 import com.github.jakicdong.techub.service.article.repository.mapper.ColumnArticleMapper;
@@ -23,6 +24,7 @@ import java.util.List;
 public class ColumnDao extends ServiceImpl<ColumnInfoMapper, ColumnInfoDO> {
     @Autowired
     private ColumnArticleMapper columnArticleMapper;
+
 
 
     public Long countColumnArticles() {
@@ -62,6 +64,22 @@ public class ColumnDao extends ServiceImpl<ColumnInfoMapper, ColumnInfoDO> {
     public int countColumnReadPeoples(Long columnId) {
         return columnArticleMapper.countColumnReadUserNums(columnId).intValue();
     }
+
+    public ColumnArticleDO getColumnArticleId(long columnId, Integer section) {
+        return columnArticleMapper.getColumnArticle(columnId, section);
+    }
+
+    /**
+     * 根据教程ID查询文章ID列表
+     *
+     * @param columnId
+     * @return
+     */
+    public List<SimpleArticleDTO> listColumnArticles(Long columnId) {
+        return columnArticleMapper.listColumnArticles(columnId);
+    }
+
+
 
 
 }

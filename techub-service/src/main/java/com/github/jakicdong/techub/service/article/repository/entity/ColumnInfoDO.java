@@ -13,7 +13,7 @@ import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("")
+@TableName("column_info")
 public class ColumnInfoDO extends BaseDO {
 
     private static final long serialVersionUID = 1920830534262012026L;
