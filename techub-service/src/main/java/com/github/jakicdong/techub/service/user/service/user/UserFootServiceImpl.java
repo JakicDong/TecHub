@@ -4,6 +4,7 @@ package com.github.jakicdong.techub.service.user.service.user;
 import com.github.jakicdong.techub.api.model.enums.DocumentTypeEnum;
 import com.github.jakicdong.techub.api.model.enums.NotifyTypeEnum;
 import com.github.jakicdong.techub.api.model.enums.OperateTypeEnum;
+import com.github.jakicdong.techub.api.model.vo.PageParam;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
 import com.github.jakicdong.techub.service.comment.repository.entity.CommentDO;
@@ -206,6 +207,17 @@ public class UserFootServiceImpl implements UserFootService {
             // 如果需要展示父评论的子评论数量，authorId 需要传父评论的 userId
             saveOrUpdateUserFoot(DocumentTypeEnum.COMMENT, comment.getParentCommentId(), parentCommentAuthor, comment.getUserId(), OperateTypeEnum.DELETE_COMMENT);
         }
+    }
+
+
+    @Override
+    public List<Long> queryUserReadArticleList(Long userId, PageParam pageParam) {
+        return userFootDao.listReadArticleByUserId(userId, pageParam);
+    }
+
+    @Override
+    public List<Long> queryUserCollectionArticleList(Long userId, PageParam pageParam) {
+        return userFootDao.listCollectedArticlesByUserId(userId, pageParam);
     }
 
 

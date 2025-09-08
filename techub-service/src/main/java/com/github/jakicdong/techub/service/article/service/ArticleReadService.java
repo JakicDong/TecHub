@@ -1,6 +1,7 @@
 package com.github.jakicdong.techub.service.article.service;
 
 
+import com.github.jakicdong.techub.api.model.enums.HomeSelectEnum;
 import com.github.jakicdong.techub.api.model.vo.PageListVo;
 import com.github.jakicdong.techub.api.model.vo.PageParam;
 import com.github.jakicdong.techub.api.model.vo.article.dto.ArticleDTO;
@@ -89,6 +90,17 @@ public interface ArticleReadService {
      * @return
      */
     ArticleDO queryBasicArticle(Long articleId);
+
+
+    /**
+     * 查询用户的文章列表
+     *
+     * @param userId
+     * @param pageParam
+     * @param select
+     * @return
+     */
+    PageListVo<ArticleDTO> queryArticlesByUserAndType(Long userId, PageParam pageParam, HomeSelectEnum select);
 
 
 }

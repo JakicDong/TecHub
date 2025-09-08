@@ -8,6 +8,7 @@ package com.github.jakicdong.techub.service.user.service;
 
 import com.github.jakicdong.techub.api.model.enums.DocumentTypeEnum;
 import com.github.jakicdong.techub.api.model.enums.OperateTypeEnum;
+import com.github.jakicdong.techub.api.model.vo.PageParam;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
 import com.github.jakicdong.techub.service.comment.repository.entity.CommentDO;
@@ -85,7 +86,24 @@ public interface UserFootService {
      */
     void removeCommentFoot(CommentDO comment, Long articleAuthor, Long parentCommentAuthor);
 
-    
+    /**
+     * 查询已读文章列表
+     *
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    List<Long> queryUserReadArticleList(Long userId, PageParam pageParam);
+
+
+    /**
+     * 查询收藏文章列表
+     *
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    List<Long> queryUserCollectionArticleList(Long userId, PageParam pageParam);
 
 
 

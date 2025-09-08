@@ -8,7 +8,7 @@
  * 4. todo: 权限判断（个人页，需要登录...）
  *
  *
- * @author yihui
- * @date 2022/7/6
+ * @author jakicdong
+ * @date 2025/9/6
  */
-package com.github.paicoding.forum.web.front;
+package com.github.jakicdong.techub.web.front;

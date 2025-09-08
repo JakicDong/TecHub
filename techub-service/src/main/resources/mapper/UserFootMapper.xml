@@ -30,5 +30,27 @@
     </select>
 
 
+    <select id="listReadArticleByUserId" resultType="java.lang.Long">
+        SELECT
+        `document_id`
+        FROM user_foot
+        WHERE
+        user_id = #{userId} and document_type = 1 and read_stat = 1 order by update_time desc
+        <if test="pageParam != null">
+            limit #{pageParam.offset}, #{pageParam.limit}
+        </if>
+    </select>
+
+    <select id="listCollectedArticlesByUserId" resultType="java.lang.Long">
+        SELECT
+        `document_id`
+        FROM user_foot
+        WHERE
+        user_id = #{userId} and document_type = 1 and collection_stat = 1 order by update_time desc
+        <if test="pageParam != null">
+            limit #{pageParam.offset}, #{pageParam.limit}
+        </if>
+    </select>
+
 
 </mapper>

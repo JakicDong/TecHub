@@ -10,6 +10,7 @@ import com.github.jakicdong.techub.api.model.vo.seo.SeoTagVo;
 import com.github.jakicdong.techub.core.util.DateUtil;
 import com.github.jakicdong.techub.web.config.GlobalViewConfig;
 import com.github.jakicdong.techub.web.front.article.vo.ArticleDetailVo;
+import com.github.jakicdong.techub.web.front.user.vo.UserHomeVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -182,6 +183,41 @@ public class SeoInjectService {
         jsonLd.put("dateModified", updateTime);
         jsonLd.put("datePublished", publishedTime);
         jsonLd.put("image", image);
+
+        if (ReqInfoContext.getReqInfo() != null) ReqInfoContext.getReqInfo().setSeo(seo);
+    }
+
+    /**
+     * 用户主页的seo标签
+     *
+     * @param user
+     */
+    public void initUserSeo(UserHomeVo user) {
+        Seo seo = initBasicSeoTag();
+        List<SeoTagVo> list = seo.getOgp();
+        Map<String, Object> jsonLd = seo.getJsonLd();
+
+        String title = "TecHub | " + user.getUserHome().getUserName() + " 的主页";
+        list.add(new SeoTagVo("og:title", title));
+        list.add(new SeoTagVo("og:description", user.getUserHome().getProfile()));
+        list.add(new SeoTagVo("og:type", "article"));
+        list.add(new SeoTagVo("og:locale", "zh-CN"));
+
+        list.add(new SeoTagVo("article:tag", "后端,前端,Java,Spring,计算机"));
+        list.add(new SeoTagVo("article:section", "主页"));
+        list.add(new SeoTagVo("article:author", user.getUserHome().getUserName()));
+
+        list.add(new SeoTagVo("author", user.getUserHome().getUserName()));
+        list.add(new SeoTagVo("title", title));
+        list.add(new SeoTagVo("description", user.getUserHome().getProfile()));
+        list.add(new SeoTagVo("keywords", KEYWORDS));
+
+        jsonLd.put("headline", title);
+        jsonLd.put("description", user.getUserHome().getProfile());
+        Map<String, Object> author = new HashMap<>();
+        author.put("@type", "Person");
+        author.put("name", user.getUserHome().getUserName());
+        jsonLd.put("author", author);
 
         if (ReqInfoContext.getReqInfo() != null) ReqInfoContext.getReqInfo().setSeo(seo);
     }

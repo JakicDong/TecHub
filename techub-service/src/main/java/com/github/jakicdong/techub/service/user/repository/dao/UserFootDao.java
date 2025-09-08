@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.jakicdong.techub.api.model.enums.DocumentTypeEnum;
 import com.github.jakicdong.techub.api.model.enums.PraiseStatEnum;
+import com.github.jakicdong.techub.api.model.vo.PageParam;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
@@ -49,5 +50,26 @@ public class UserFootDao extends ServiceImpl<UserFootMapper, UserFootDO> {
 
     }
 
+    /**
+     * 查询用户阅读的文章列表
+     *
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    public List<Long> listReadArticleByUserId(Long userId, PageParam pageParam) {
+        return baseMapper.listReadArticleByUserId(userId, pageParam);
+    }
+
+    /**
+     * 查询用户收藏的文章列表
+     *
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    public List<Long> listCollectedArticlesByUserId(Long userId, PageParam pageParam) {
+        return baseMapper.listCollectedArticlesByUserId(userId, pageParam);
+    }
 
 }
