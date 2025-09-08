@@ -93,7 +93,7 @@ public interface ArticleReadService {
 
 
     /**
-     * 查询用户的文章列表
+     * 查询用户主页所选择的列表
      *
      * @param userId
      * @param pageParam

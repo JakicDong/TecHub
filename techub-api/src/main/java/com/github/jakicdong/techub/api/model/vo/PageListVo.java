@@ -34,6 +34,7 @@ public class PageListVo<T> {
     public static <T> PageListVo<T> newVo(List<T> list, long pageSize) {
         PageListVo<T> vo = new PageListVo<>();
         vo.setList(Optional.ofNullable(list).orElse(Collections.emptyList()));
+        //如果拿回来的数量等于页面大小，说明还有更多
         vo.setHasMore(vo.getList().size() == pageSize);
         return vo;
     }

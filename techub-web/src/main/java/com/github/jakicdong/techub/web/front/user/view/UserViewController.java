@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -78,6 +79,43 @@ public class UserViewController extends BaseViewController {
         UserHomeVo vo = new UserHomeVo();
         vo.setHomeSelectType(StringUtils.isBlank(homeSelectType) ? HomeSelectEnum.ARTICLE.getCode() : homeSelectType);
         vo.setFollowSelectType(StringUtils.isBlank(followSelectType) ? FollowTypeEnum.FOLLOW.getCode() : followSelectType);
+        //用户主页信息DTO获取
+        UserStatisticInfoDTO userInfo = userService.queryUserInfoWithStatistic(userId);
+        vo.setUserHome(userInfo);
+
+        //获取标签信息都有哪些
+        List<TagSelectDTO> homeSelectTags = homeSelectTags(vo.getHomeSelectType(), Objects.equals(userId, ReqInfoContext.getReqInfo().getUserId()));
+        vo.setHomeSelectTags(homeSelectTags);
+
+        //设置二维码
+        vo.setPayQrCodes(PayConverter.formatPayCodeInfo(userInfo.getPayCode()));
+
+        //查询选择标签的信息
+        userHomeSelectList(vo, userId);
+        model.addAttribute("vo", vo);
+        //初始化SEO信息
+        SpringUtil.getBean(SeoInjectService.class).initUserSeo(vo);
+        return "views/user/index";
+
+    }
+
+    /**
+     * 访问其他用户的主页
+     *
+     * @param userId
+     * @param homeSelectType
+     * @param followSelectType
+     * @param model
+     * @return
+     */
+    @GetMapping(path = "/{userId}")
+    public String detail(@PathVariable(name = "userId") Long userId,
+                         @RequestParam(name = "homeSelectType", required = false) String homeSelectType,
+                         @RequestParam(name = "followSelectType", required = false) String followSelectType,
+                         Model model){
+        UserHomeVo vo = new UserHomeVo();
+        vo.setHomeSelectType(StringUtils.isBlank(homeSelectType) ? HomeSelectEnum.ARTICLE.getCode() : homeSelectType);
+        vo.setFollowSelectType(StringUtils.isBlank(followSelectType) ? FollowTypeEnum.FOLLOW.getCode() : followSelectType);
 
         UserStatisticInfoDTO userInfo = userService.queryUserInfoWithStatistic(userId);
         vo.setUserHome(userInfo);
@@ -85,15 +123,11 @@ public class UserViewController extends BaseViewController {
         List<TagSelectDTO> homeSelectTags = homeSelectTags(vo.getHomeSelectType(), Objects.equals(userId, ReqInfoContext.getReqInfo().getUserId()));
         vo.setHomeSelectTags(homeSelectTags);
 
-        vo.setPayQrCodes(PayConverter.formatPayCodeInfo(userInfo.getPayCode()));
-
         userHomeSelectList(vo, userId);
         model.addAttribute("vo", vo);
         SpringUtil.getBean(SeoInjectService.class).initUserSeo(vo);
         return "views/user/index";
-
     }
-
 
 
     /**
@@ -137,6 +171,7 @@ public class UserViewController extends BaseViewController {
             case ARTICLE:
             case READ:
             case COLLECTION:
+                //三个条件共用一个语句
                 PageListVo<ArticleDTO> dto = articleReadService.queryArticlesByUserAndType(userId, pageParam, select);
                 vo.setHomeSelectList(dto);
                 return;
