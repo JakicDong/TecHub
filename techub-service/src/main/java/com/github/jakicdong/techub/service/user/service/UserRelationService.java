@@ -3,6 +3,7 @@ package com.github.jakicdong.techub.service.user.service;
 
 import com.github.jakicdong.techub.api.model.vo.PageListVo;
 import com.github.jakicdong.techub.api.model.vo.PageParam;
+import com.github.jakicdong.techub.api.model.vo.user.UserRelationReq;
 import com.github.jakicdong.techub.api.model.vo.user.dto.FollowUserInfoDTO;
 
 import java.util.List;
@@ -15,7 +16,6 @@ import java.util.Set;
 */
 public interface UserRelationService {
 
-
     /**
      * 我关注的用户
      *
@@ -24,6 +24,7 @@ public interface UserRelationService {
      * @return
      */
     PageListVo<FollowUserInfoDTO> getUserFollowList(Long userId, PageParam pageParam);
+
 
     /**
      * 关注我的粉丝
@@ -51,5 +52,12 @@ public interface UserRelationService {
      */
     Set<Long> getFollowedUserId(List<Long> userIds, Long loginUserId);
 
+    /**
+     * 保存用户关系: 关注or取消关注
+     *
+     * @param req
+     * @throws Exception
+     */
+    void saveUserRelation(UserRelationReq req);
 
 }

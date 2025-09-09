@@ -4,6 +4,7 @@ import com.github.jakicdong.techub.api.model.context.ReqInfoContext;
 import com.github.jakicdong.techub.api.model.exception.ExceptionUtil;
 import com.github.jakicdong.techub.api.model.vo.article.dto.YearArticleDTO;
 import com.github.jakicdong.techub.api.model.vo.constants.StatusEnum;
+import com.github.jakicdong.techub.api.model.vo.user.UserInfoSaveReq;
 import com.github.jakicdong.techub.api.model.vo.user.UserPwdLoginReq;
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
@@ -35,14 +36,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     @Resource
     private UserDao userDao;
 
     @Resource
     private UserAiDao userAiDao;
 
-    @Autowired
-    private UserSessionHelper userSessionHelper;
     @Resource
     private UserRelationDao userRelationDao;
 
@@ -52,12 +52,95 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ArticleDao articleDao;
 
+    @Autowired
+    private UserSessionHelper userSessionHelper;
 
     @Autowired
     private UserPwdEncoder userPwdEncoder;
 
     @Autowired
     private UserAiService userAiService;
+
+    @Override
+    public UserDO getWxUser(String wxuuid) {
+        return userDao.getByThirdAccountId(wxuuid);
+    }
+
+    @Override
+    public List<SimpleUserInfoDTO> searchUser(String userName) {
+        List<UserInfoDO> users = userDao.getByUserNameLike(userName);
+        if (CollectionUtils.isEmpty(users)) {
+            return Collections.emptyList();
+        }
+        return users.stream().map(s -> new SimpleUserInfoDTO()
+                        .setUserId(s.getUserId())
+                        .setName(s.getUserName())
+                        .setAvatar(s.getPhoto())
+                        .setProfile(s.getProfile())
+                )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void saveUserInfo(UserInfoSaveReq req) {
+        UserInfoDO userInfoDO = UserConverter.toDO(req);
+        userDao.updateUserInfo(userInfoDO);
+    }
+
+    @Override
+    public BaseUserInfoDTO getAndUpdateUserIpInfoBySessionId(String session, String clientIp) {
+        if (StringUtils.isBlank(session)) {
+            return null;
+        }
+
+        Long userId = userSessionHelper.getUserIdBySession(session);
+        if (userId == null) {
+            return null;
+        }
+
+        // 查询用户信息，并更新最后一次使用的ip
+        UserInfoDO user = userDao.getByUserId(userId);
+        if (user == null) {
+            // 常见于：session中记录的用户被删除了，直接移除缓存中的session，走重新登录流程
+            userSessionHelper.removeSession(session);
+            return null;
+        }
+
+        IpInfo ip = user.getIp();
+        if (clientIp != null && !Objects.equals(ip.getLatestIp(), clientIp)) {
+            // ip不同，需要更新
+            ip.setLatestIp(clientIp);
+            ip.setLatestRegion(IpUtil.getLocationByIp(clientIp).toRegionStr());
+
+            if (ip.getFirstIp() == null) {
+                ip.setFirstIp(clientIp);
+                ip.setFirstRegion(ip.getLatestRegion());
+            }
+            userDao.updateById(user);
+        }
+
+        // 查询 user_ai信息，标注用户是否为星球专属用户
+        UserAiDO userAiDO = userAiDao.getByUserId(userId);
+        return UserConverter.toDTO(user, userAiDO);
+    }
+
+    @Override
+    public SimpleUserInfoDTO querySimpleUserInfo(Long userId) {
+        UserInfoDO user = userDao.getByUserId(userId);
+        if (user == null) {
+            throw ExceptionUtil.of(StatusEnum.USER_NOT_EXISTS, "userId=" + userId);
+        }
+        return UserConverter.toSimpleInfo(user);
+    }
+
+    @Override
+    public BaseUserInfoDTO queryBasicUserInfo(Long userId) {
+        UserInfoDO user = userDao.getByUserId(userId);
+        if (user == null) {
+            throw ExceptionUtil.of(StatusEnum.USER_NOT_EXISTS, "userId=" + userId);
+        }
+        return UserConverter.toDTO(user);
+    }
 
     @Override
     public List<SimpleUserInfoDTO> batchQuerySimpleUserInfo(Collection<Long> userIds) {
@@ -69,12 +152,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseUserInfoDTO queryBasicUserInfo(Long userId) {
-        UserInfoDO user = userDao.getByUserId(userId);
-        if (user == null) {
-            throw ExceptionUtil.of(StatusEnum.USER_NOT_EXISTS, "userId=" + userId);
+    public List<BaseUserInfoDTO> batchQueryBasicUserInfo(Collection<Long> userIds) {
+        List<UserInfoDO> users = userDao.getByUserIds(userIds);
+        if (CollectionUtils.isEmpty(users)) {
+            throw ExceptionUtil.of(StatusEnum.USER_NOT_EXISTS, "userId=" + userIds);
         }
-        return UserConverter.toDTO(user);
+        return users.stream().map(UserConverter::toDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -115,42 +198,11 @@ public class UserServiceImpl implements UserService {
         userHomeDTO.setYearArticleList(yearArticleDTOS);
         return userHomeDTO;
     }
-    
+
     @Override
-    public BaseUserInfoDTO getAndUpdateUserIpInfoBySessionId(String session, String clientIp) {
-        if (StringUtils.isBlank(session)) {
-            return null;
-        }
-
-        Long userId = userSessionHelper.getUserIdBySession(session);
-        if (userId == null) {
-            return null;
-        }
-
-        // 查询用户信息，并更新最后一次使用的ip
-        UserInfoDO user = userDao.getByUserId(userId);
-        if (user == null) {
-            // 常见于：session中记录的用户被删除了，直接移除缓存中的session，走重新登录流程
-            userSessionHelper.removeSession(session);
-            return null;
-        }
-
-        IpInfo ip = user.getIp();
-        if (clientIp != null && !Objects.equals(ip.getLatestIp(), clientIp)) {
-            // ip不同，需要更新
-            ip.setLatestIp(clientIp);
-            ip.setLatestRegion(IpUtil.getLocationByIp(clientIp).toRegionStr());
-
-            if (ip.getFirstIp() == null) {
-                ip.setFirstIp(clientIp);
-                ip.setFirstRegion(ip.getLatestRegion());
-            }
-            userDao.updateById(user);
-        }
-        UserAiDO userAiDO = userAiDao.getByUserId(userId);
-        return UserConverter.toDTO(user, userAiDO);
+    public Long getUserCount() {
+        return this.userDao.getUserCount();
     }
-
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -176,9 +228,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long getUserCount() {
-        return this.userDao.getUserCount();
+    public BaseUserInfoDTO queryUserByLoginName(String uname) {
+        UserDO user = userDao.getUserByUserName(uname);
+        if (user == null) {
+            return null;
+        }
+
+        return queryBasicUserInfo(user.getId());
     }
-
-
 }

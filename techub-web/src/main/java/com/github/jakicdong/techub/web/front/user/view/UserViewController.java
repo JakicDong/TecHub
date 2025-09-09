@@ -224,10 +224,11 @@ public class UserViewController extends BaseViewController {
     }
 
 
-
-
-
-
+    @GetMapping("pay")
+    @Permission(role = UserRole.LOGIN)
+    public String pay() {
+        return  "views/user/pay-item";
+    }
 
 
 

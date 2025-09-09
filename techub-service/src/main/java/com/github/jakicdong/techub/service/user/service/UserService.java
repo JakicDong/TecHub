@@ -1,10 +1,12 @@
 package com.github.jakicdong.techub.service.user.service;
 
 
+import com.github.jakicdong.techub.api.model.vo.user.UserInfoSaveReq;
 import com.github.jakicdong.techub.api.model.vo.user.UserPwdLoginReq;
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserStatisticInfoDTO;
+import com.github.jakicdong.techub.service.user.repository.entity.UserDO;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,38 +19,27 @@ import java.util.List;
 public interface UserService {
 
     /**
-     * 用户计数
+     * 判断微信用户是否注册过
      *
+     * @param wxuuid
      * @return
      */
-    Long getUserCount();
+    UserDO getWxUser(String wxuuid);
 
     /**
-     * 批量查询用户基本信息
+     * 根据用户名模糊搜索用户
      *
-     * @param userIds
+     * @param userName 用户名
      * @return
      */
-    List<SimpleUserInfoDTO> batchQuerySimpleUserInfo(Collection<Long> userIds);
-
-
-    /**
-     * 查询用户基本信息
-     * todo: 可以做缓存优化
-     *
-     * @param userId
-     * @return
-     */
-    BaseUserInfoDTO queryBasicUserInfo(Long userId);
+    List<SimpleUserInfoDTO> searchUser(String userName);
 
     /**
-     * 查询用户主页信息
+     * 保存用户详情
      *
-     * @param userId
-     * @return
-     * @throws Exception
+     * @param req
      */
-    UserStatisticInfoDTO queryUserInfoWithStatistic(Long userId);
+    void saveUserInfo(UserInfoSaveReq req);
 
     /**
      * 获取登录的用户信息,并更行丢对应的ip信息
@@ -60,8 +51,67 @@ public interface UserService {
     BaseUserInfoDTO getAndUpdateUserIpInfoBySessionId(String session, String clientIp);
 
     /**
+     * 查询极简的用户信息
+     *
+     * @param userId
+     * @return
+     */
+    SimpleUserInfoDTO querySimpleUserInfo(Long userId);
+
+    /**
+     * 查询用户基本信息
+     * todo: 可以做缓存优化
+     *
+     * @param userId
+     * @return
+     */
+    BaseUserInfoDTO queryBasicUserInfo(Long userId);
+
+
+    /**
+     * 批量查询用户基本信息
+     *
+     * @param userIds
+     * @return
+     */
+    List<SimpleUserInfoDTO> batchQuerySimpleUserInfo(Collection<Long> userIds);
+
+    /**
+     * 批量查询用户基本信息
+     *
+     * @param userIds
+     * @return
+     */
+    List<BaseUserInfoDTO> batchQueryBasicUserInfo(Collection<Long> userIds);
+
+    /**
+     * 查询用户主页信息
+     *
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    UserStatisticInfoDTO queryUserInfoWithStatistic(Long userId);
+
+    /**
+     * 用户计数
+     *
+     * @return
+     */
+    Long getUserCount();
+
+    /**
      * 绑定用户信息
      */
     void bindUserInfo(UserPwdLoginReq loginReq);
+
+
+    /**
+     * 根据登录用户名，查询用户信息
+     *
+     * @param uname
+     * @return
+     */
+    BaseUserInfoDTO queryUserByLoginName(String uname);
 
 }

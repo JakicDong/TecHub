@@ -1,10 +1,16 @@
 package com.github.jakicdong.techub.service.user.service.relation;
 
+import com.github.jakicdong.techub.api.model.context.ReqInfoContext;
 import com.github.jakicdong.techub.api.model.enums.FollowStateEnum;
+import com.github.jakicdong.techub.api.model.enums.NotifyTypeEnum;
 import com.github.jakicdong.techub.api.model.vo.PageListVo;
 import com.github.jakicdong.techub.api.model.vo.PageParam;
+import com.github.jakicdong.techub.api.model.vo.notify.NotifyMsgEvent;
+import com.github.jakicdong.techub.api.model.vo.user.UserRelationReq;
 import com.github.jakicdong.techub.api.model.vo.user.dto.FollowUserInfoDTO;
 import com.github.jakicdong.techub.core.util.MapUtils;
+import com.github.jakicdong.techub.core.util.SpringUtil;
+import com.github.jakicdong.techub.service.user.converter.UserConverter;
 import com.github.jakicdong.techub.service.user.repository.dao.UserRelationDao;
 import com.github.jakicdong.techub.service.user.repository.entity.UserRelationDO;
 import com.github.jakicdong.techub.service.user.service.UserRelationService;
@@ -39,14 +45,11 @@ public class UserRelationServiceImpl implements UserRelationService {
         return PageListVo.newVo(userRelationList, pageParam.getPageSize());
     }
 
-
     @Override
     public PageListVo<FollowUserInfoDTO> getUserFansList(Long userId, PageParam pageParam) {
         List<FollowUserInfoDTO> userRelationList = userRelationDao.listUserFans(userId, pageParam);
         return PageListVo.newVo(userRelationList, pageParam.getPageSize());
     }
-
-
 
     @Override
     public void updateUserFollowRelationId(PageListVo<FollowUserInfoDTO> followList, Long loginUserId) {
@@ -99,6 +102,23 @@ public class UserRelationServiceImpl implements UserRelationService {
         return relationMap.values().stream().filter(s -> s.getFollowState().equals(FollowStateEnum.FOLLOW.getCode())).map(UserRelationDO::getUserId).collect(Collectors.toSet());
     }
 
+    @Override
+    public void saveUserRelation(UserRelationReq req) {
+        // 查询是否存在
+        UserRelationDO userRelationDO = userRelationDao.getUserRelationRecord(req.getUserId(), ReqInfoContext.getReqInfo().getUserId());
+        if (userRelationDO == null) {
+            userRelationDO = UserConverter.toDO(req);
+            userRelationDao.save(userRelationDO);
+            // 发布关注事件
+            SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.FOLLOW, userRelationDO));
+            return;
+        }
 
+        // 将是否关注状态重置
+        userRelationDO.setFollowState(req.getFollowed() ? FollowStateEnum.FOLLOW.getCode() : FollowStateEnum.CANCEL_FOLLOW.getCode());
+        userRelationDao.updateById(userRelationDO);
+        // 发布关注、取消关注事件
+        SpringUtil.publishEvent(new NotifyMsgEvent<>(this, req.getFollowed() ? NotifyTypeEnum.FOLLOW : NotifyTypeEnum.CANCEL_FOLLOW, userRelationDO));
+    }
 
 }
