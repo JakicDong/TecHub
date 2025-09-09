@@ -26,15 +26,23 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentReadServiceImpl implements CommentReadService {
+
     @Autowired
     private CommentDao commentDao;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private CountService countService;
 
     @Autowired
     private UserFootService userFootService;
+
+    @Override
+    public CommentDO queryComment(Long commentId) {
+        return commentDao.getById(commentId);
+    }
 
     @Override
     public List<TopCommentDTO> getArticleComments(Long articleId, PageParam page) {
@@ -158,7 +166,9 @@ public class CommentReadServiceImpl implements CommentReadService {
         return result;
     }
 
-
-
+    @Override
+    public int queryCommentCount(Long articleId) {
+        return commentDao.commentCount(articleId);
+    }
 
 }

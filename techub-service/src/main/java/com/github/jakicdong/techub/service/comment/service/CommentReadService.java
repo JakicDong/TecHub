@@ -9,12 +9,20 @@ package com.github.jakicdong.techub.service.comment.service;
 
 import com.github.jakicdong.techub.api.model.vo.PageParam;
 import com.github.jakicdong.techub.api.model.vo.comment.dto.TopCommentDTO;
+import com.github.jakicdong.techub.service.comment.repository.entity.CommentDO;
 
 import java.util.List;
 
 public interface CommentReadService {
 
 
+    /**
+     * 根据评论id查询评论信息
+     *
+     * @param commentId
+     * @return
+     */
+    CommentDO queryComment(Long commentId);
 
     /**
      * 查询文章评论列表
@@ -32,4 +40,12 @@ public interface CommentReadService {
      * @return
      */
     TopCommentDTO queryHotComment(Long articleId);
+
+    /**
+     * 文章的有效评论数
+     *
+     * @param articleId
+     * @return
+     */
+    int queryCommentCount(Long articleId);
 }

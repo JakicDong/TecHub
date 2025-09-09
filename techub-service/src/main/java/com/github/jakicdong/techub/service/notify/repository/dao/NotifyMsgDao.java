@@ -1,6 +1,7 @@
 package com.github.jakicdong.techub.service.notify.repository.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.jakicdong.techub.api.model.enums.NotifyStatEnum;
 import com.github.jakicdong.techub.api.model.enums.NotifyTypeEnum;
@@ -9,6 +10,7 @@ import com.github.jakicdong.techub.api.model.vo.notify.dto.NotifyMsgDTO;
 import com.github.jakicdong.techub.service.notify.repository.entity.NotifyMsgDO;
 import com.github.jakicdong.techub.service.notify.repository.mapper.NotifyMsgMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +19,28 @@ import java.util.stream.Collectors;
 
 @Repository
 public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
+
+
+    /**
+     * 查询消息记录，用于幂等过滤
+     *
+     * @param msg
+     * @return
+     */
+    public NotifyMsgDO getByUserIdRelatedIdAndType(NotifyMsgDO msg) {
+        List<NotifyMsgDO> list = lambdaQuery().eq(NotifyMsgDO::getNotifyUserId, msg.getNotifyUserId())
+                .eq(NotifyMsgDO::getOperateUserId, msg.getOperateUserId())
+                .eq(NotifyMsgDO::getType, msg.getType())
+                .eq(NotifyMsgDO::getRelatedId, msg.getRelatedId())
+                .orderByDesc(NotifyMsgDO::getId)
+                .page(new Page<>(0, 1))
+                .getRecords();
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list.get(0);
+    }
+
 
     /**
      * 查询用户的消息通知数量
@@ -30,7 +54,6 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
                 .eq(stat != null, NotifyMsgDO::getState, stat)
                 .count().intValue();
     }
-
 
     /**
      * 查询用户各类型的未读消息数量

@@ -1,6 +1,7 @@
 package com.github.jakicdong.techub.service.comment.repository.dao;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.jakicdong.techub.api.model.enums.YesOrNoEnum;
 import com.github.jakicdong.techub.api.model.vo.PageParam;
@@ -51,5 +52,20 @@ public class CommentDao extends ServiceImpl<CommentMapper, CommentDO> {
             return null;
         }
         return baseMapper.selectById(Long.parseLong(String.valueOf(map.get("top_comment_id"))));
+    }
+
+
+    /**
+     * 查询有效评论数
+     *
+     * @param articleId
+     * @return
+     */
+    public int commentCount(Long articleId) {
+        QueryWrapper<CommentDO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda()
+                .eq(CommentDO::getArticleId, articleId)
+                .eq(CommentDO::getDeleted, YesOrNoEnum.NO.getCode());
+        return baseMapper.selectCount(queryWrapper).intValue();
     }
 }
