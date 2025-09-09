@@ -6,6 +6,8 @@ package com.github.jakicdong.techub.service.notify.service;
 * @time 2025/7/4 17:08
 */
 
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+
 public interface NotifyService {
     public static String NOTIFY_TOPIC = "/msg";
 
@@ -16,4 +18,19 @@ public interface NotifyService {
      * @return
      */
     int queryUserNotifyMsgCount(Long userId);
+
+    /**
+     * 通知用户
+     *
+     * @param userId
+     * @param msg
+     */
+    void notifyToUser(Long userId, String msg);
+
+    /**
+     * 通知渠道维护
+     *
+     * @param accessor
+     */
+    void notifyChannelMaintain(StompHeaderAccessor accessor);
 }
