@@ -1,9 +1,19 @@
 package com.github.jakicdong.techub.service.notify.repository.dao;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.jakicdong.techub.api.model.enums.NotifyStatEnum;
+import com.github.jakicdong.techub.api.model.enums.NotifyTypeEnum;
+import com.github.jakicdong.techub.api.model.vo.PageParam;
+import com.github.jakicdong.techub.api.model.vo.notify.dto.NotifyMsgDTO;
 import com.github.jakicdong.techub.service.notify.repository.entity.NotifyMsgDO;
 import com.github.jakicdong.techub.service.notify.repository.mapper.NotifyMsgMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
@@ -20,4 +30,59 @@ public class NotifyMsgDao extends ServiceImpl<NotifyMsgMapper, NotifyMsgDO> {
                 .eq(stat != null, NotifyMsgDO::getState, stat)
                 .count().intValue();
     }
+
+
+    /**
+     * 查询用户各类型的未读消息数量
+     *
+     * @param userId
+     * @return
+     */
+    public Map<Integer, Integer> groupCountByUserIdAndStat(long userId, Integer stat) {
+        QueryWrapper<NotifyMsgDO> wrapper = new QueryWrapper<>();
+        wrapper.select("type, count(*) as cnt");
+        wrapper.eq("notify_user_id", userId);
+        if (stat != null) {
+            wrapper.eq("state", stat);
+        }
+        wrapper.groupBy("type");
+        List<Map<String, Object>> map = listMaps(wrapper);
+        Map<Integer, Integer> result = new HashMap<>();
+        map.forEach(s -> {
+            result.put(Integer.valueOf(s.get("type").toString()), Integer.valueOf(s.get("cnt").toString()));
+        });
+        return result;
+    }
+
+    /**
+     * 查询用户消息列表
+     *
+     * @param userId
+     * @param type
+     * @return
+     */
+    public List<NotifyMsgDTO> listNotifyMsgByUserIdAndType(long userId, NotifyTypeEnum type, PageParam page) {
+        switch (type) {
+            case REPLY:
+            case COMMENT:
+            case COLLECT:
+            case PRAISE:
+                return baseMapper.listArticleRelatedNotices(userId, type.getType(), page);
+            default:
+                return baseMapper.listNormalNotices(userId, type.getType(), page);
+        }
+    }
+
+    /**
+     * 设置消息为已读
+     *
+     * @param list
+     */
+    public void updateNotifyMsgToRead(List<NotifyMsgDTO> list) {
+        List<Long> ids = list.stream().filter(s -> s.getState() == NotifyStatEnum.UNREAD.getStat()).map(NotifyMsgDTO::getMsgId).collect(Collectors.toList());
+        if (!ids.isEmpty()) {
+            baseMapper.updateNoticeRead(ids);
+        }
+    }
+
 }
