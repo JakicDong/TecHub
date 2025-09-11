@@ -103,4 +103,19 @@ public interface ArticleReadService {
     PageListVo<ArticleDTO> queryArticlesByUserAndType(Long userId, PageParam pageParam, HomeSelectEnum select);
 
 
+    /**
+     * 查询某个标签下的文章，支持翻页
+     *
+     * @param tagId
+     * @param page
+     * @return
+     */
+    PageListVo<ArticleDTO> queryArticlesByTag(Long tagId, PageParam page);
+    /**
+     * 提前文章摘要
+     *
+     * @param content
+     * @return
+     */
+    String generateSummary(String content);
 }

@@ -50,4 +50,13 @@ public interface ImageUploader {
         }
         return DEFAULT_FILE_TYPE;
     }
+    /**
+     * 判断外网图片是否依然需要处理
+     *
+     * @param fileUrl
+     * @return true 表示忽略，不需要转存
+     */
+    boolean uploadIgnore(String fileUrl);
+
 }
+

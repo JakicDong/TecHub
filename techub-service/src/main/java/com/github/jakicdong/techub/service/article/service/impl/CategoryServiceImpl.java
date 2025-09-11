@@ -95,5 +95,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
+    @Override
+    public Long queryCategoryId(String category) {
+        return categoryCaches.asMap().values().stream()
+                .filter(s -> s.getCategory().equalsIgnoreCase(category))
+                .findFirst().map(CategoryDTO::getCategoryId).orElse(null);
+    }
+
 
 }

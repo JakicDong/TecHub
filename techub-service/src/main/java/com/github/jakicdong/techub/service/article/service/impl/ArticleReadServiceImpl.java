@@ -9,6 +9,7 @@ import com.github.jakicdong.techub.api.model.vo.article.dto.CategoryDTO;
 import com.github.jakicdong.techub.api.model.vo.article.dto.SimpleArticleDTO;
 import com.github.jakicdong.techub.api.model.vo.constants.StatusEnum;
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
+import com.github.jakicdong.techub.core.util.ArticleUtil;
 import com.github.jakicdong.techub.service.article.conveter.ArticleConverter;
 import com.github.jakicdong.techub.service.article.repository.dao.ArticleDao;
 import com.github.jakicdong.techub.service.article.repository.dao.ArticleTagDao;
@@ -223,6 +224,17 @@ public class ArticleReadServiceImpl implements ArticleReadService {
             }
         });
         return articleDOS;
+    }
+
+    @Override
+    public PageListVo<ArticleDTO> queryArticlesByTag(Long tagId, PageParam page) {
+        List<ArticleDO> records = articleDao.listRelatedArticlesOrderByReadCount(null, Arrays.asList(tagId), page);
+        return buildArticleListVo(records, page.getPageSize());
+    }
+
+    @Override
+    public String generateSummary(String content) {
+        return ArticleUtil.pickSummary(content);
     }
 
 }

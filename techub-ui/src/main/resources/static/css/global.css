@@ -44,7 +44,7 @@ body {
   --pai-bg-dark-2: #2c3134;
   /*主题色更深一点*/
   --pai-bg-dark-3: #000000;
-    /*讯飞星火的左侧聊天背景色*/
+  /*讯飞星火的左侧聊天背景色*/
   --pai-bg-smart-chat: #f5f5f5;
   /*横线的颜色*/
   --pai-hr-color-1: #f0f0f0;
@@ -68,7 +68,6 @@ body {
   /*外边距*/
   margin: 0;
 }
-
 
 /*全局的色调往前面放*/
 ul {
@@ -190,7 +189,7 @@ button:focus {
 }
 
 .mdnice-user-dialog-footer a {
-    color: var(--pai-brand-1-normal);
+  color: var(--pai-brand-1-normal);
 }
 
 .mdnice-user-dialog-footer a:hover {
@@ -259,10 +258,10 @@ button:focus {
 }
 
 .oauth-bg {
-    border-radius: 50%;
-    background-color: var(--pai-bg-light-1);
-    justify-content: center;
-    margin-right: 8px;
+  border-radius: 50%;
+  background-color: var(--pai-bg-light-1);
+  justify-content: center;
+  margin-right: 8px;
 }
 
 .clickable {
@@ -827,7 +826,6 @@ button:focus {
   font-weight: 700;
 }
 
-.search-no-result p {
 .search-no-result p {
   line-height: 2.6rem;
 }

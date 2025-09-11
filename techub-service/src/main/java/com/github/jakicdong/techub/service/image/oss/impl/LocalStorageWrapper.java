@@ -7,6 +7,7 @@ import com.github.jakicdong.techub.core.config.ImageProperties;
 import com.github.jakicdong.techub.core.util.StopWatchUtil;
 import com.github.jakicdong.techub.service.image.oss.ImageUploader;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
@@ -70,6 +71,26 @@ public class LocalStorageWrapper implements ImageUploader {
      */
     private String genTmpFileName() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddhhmmssSSS")) + "_" + random.nextInt(100);
+    }
+
+    /**
+     * 外网图片转存判定，对于没有转存过的，且是http开头的网络图片时，才需要进行转存
+     *
+     * @param img
+     * @return true 表示不需要转存
+     */
+    @Override
+    public boolean uploadIgnore(String img) {
+        if (StringUtils.isNotBlank(imageProperties.getCdnHost()) && img.startsWith(imageProperties.getCdnHost())) {
+            return true;
+        }
+
+        // 如果是oss的图片，也不需要转存
+        if (StringUtils.isNotBlank(imageProperties.getOss().getHost()) && img.startsWith(imageProperties.getOss().getHost())) {
+            return true;
+        }
+
+        return !img.startsWith("http");
     }
 
 }
