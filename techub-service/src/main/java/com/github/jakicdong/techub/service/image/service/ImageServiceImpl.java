@@ -132,30 +132,43 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public String saveImg(String img) {
         if (imageUploader.uploadIgnore(img)) {
+            // 1. 检查是否需要转存
             // 已经转存过，不需要再次转存；非http图片，不处理
             return img;
         }
 
         try {
+            // 2. 从外网下载图片流
             InputStream stream = FileReadUtil.getStreamByFileName(img);
+            
+            // 3. 解析URL获取文件扩展名
             URI uri = URI.create(img);
             String path = uri.getPath();
             int index = path.lastIndexOf(".");
             String fileType = null;
             if (index > 0) {
-                // 从url中获取文件类型
+                // 从url中获取文件类型 (如: .jpg, .png, .gif)
                 fileType = path.substring(index + 1);
             }
+            
+            // 4. 计算图片的SHA256摘要（用于去重）
             String digest = calculateSHA256(stream);
+            
+            // 5. 检查缓存中是否已存在相同图片
             String ans = imgReplaceCache.getIfPresent(digest);
             if (StringUtils.isBlank(ans)) {
+                // 6. 上传到本地存储（OSS/本地文件系统）
                 ans = imageUploader.upload(stream, fileType);
+                // 7. 将结果存入缓存，避免重复上传
                 imgReplaceCache.put(digest, ans);
             }
+            
+            // 8. 处理上传失败的情况
             if (StringUtils.isBlank(ans)) {
                 return buildUploadFailImgUrl(img);
             }
             return ans;
+            
         } catch (Exception e) {
             log.error("外网图片转存异常! img:{}", img, e);
             return buildUploadFailImgUrl(img);
