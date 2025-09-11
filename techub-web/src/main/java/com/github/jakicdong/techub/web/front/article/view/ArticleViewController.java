@@ -5,21 +5,26 @@ import com.github.jakicdong.techub.api.model.enums.ArticleReadTypeEnum;
 import com.github.jakicdong.techub.api.model.vo.PageParam;
 import com.github.jakicdong.techub.api.model.vo.article.dto.ArticleDTO;
 import com.github.jakicdong.techub.api.model.vo.article.dto.ArticleOtherDTO;
+import com.github.jakicdong.techub.api.model.vo.article.dto.CategoryDTO;
 import com.github.jakicdong.techub.api.model.vo.comment.dto.TopCommentDTO;
 import com.github.jakicdong.techub.api.model.vo.recommend.SideBarDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserStatisticInfoDTO;
+import com.github.jakicdong.techub.core.permission.Permission;
+import com.github.jakicdong.techub.core.permission.UserRole;
 import com.github.jakicdong.techub.core.util.MarkdownConverter;
 import com.github.jakicdong.techub.core.util.SpringUtil;
 import com.github.jakicdong.techub.service.article.conveter.PayConverter;
 import com.github.jakicdong.techub.service.article.repository.entity.ColumnArticleDO;
 import com.github.jakicdong.techub.service.article.service.ArticlePayService;
 import com.github.jakicdong.techub.service.article.service.ArticleReadService;
+import com.github.jakicdong.techub.service.article.service.CategoryService;
 import com.github.jakicdong.techub.service.article.service.ColumnService;
 import com.github.jakicdong.techub.service.comment.service.CommentReadService;
 import com.github.jakicdong.techub.service.sidebar.service.SidebarService;
 import com.github.jakicdong.techub.service.user.service.UserService;
 import com.github.jakicdong.techub.web.front.article.extra.ArticleReadViewServiceExtend;
 import com.github.jakicdong.techub.web.front.article.vo.ArticleDetailVo;
+import com.github.jakicdong.techub.web.front.article.vo.ArticleEditVo;
 import com.github.jakicdong.techub.web.global.BaseViewController;
 import com.github.jakicdong.techub.web.global.SeoInjectService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +34,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -68,9 +74,48 @@ public class ArticleViewController extends BaseViewController {
     private SidebarService sidebarService;
     @Autowired
     private ColumnService columnService;
-
     @Autowired
     private ArticleReadViewServiceExtend articleReadViewServiceExtend;
+    @Autowired
+    private CategoryService categoryService;
+
+    /**
+     * 文章编辑页
+     *
+     * @param articleId
+     * @return
+     */
+    @Permission(role = UserRole.LOGIN)
+    @GetMapping("/edit")
+    public String edit(@RequestParam(required = false) Long articleId,
+                       Model model){
+        ArticleEditVo vo = new ArticleEditVo();
+        if(articleId != null){
+            //如果要编辑的文章并不是空的,那需要先查询文章的详情
+            ArticleDTO article = articleService.queryDetailArticleInfo(articleId);
+            vo.setArticle(article);
+            if (!Objects.equals(article.getAuthor(), ReqInfoContext.getReqInfo().getUserId())) {
+                // 没有权限
+                model.addAttribute("toast", "内容不存在");
+                return "redirect:403";
+            }
+
+            List<CategoryDTO> categoryList = categoryService.loadAllCategories();
+            categoryList.forEach(s -> {
+                s.setSelected(s.getCategoryId().equals(article.getCategory().getCategoryId()));
+            });
+            vo.setCategories(categoryList);
+            vo.setTags(article.getTags());
+        }else{
+            //如果是新增文章,那么直接返回一个空的vo
+            List<CategoryDTO> categoryList = categoryService.loadAllCategories();
+            vo.setCategories(categoryList);
+            vo.setTags(Collections.emptyList());
+        }
+        model.addAttribute("vo", vo);
+        return "views/article-edit/index";
+    }
+
 
     @GetMapping("detail/{articleId}")
     public String detail(@PathVariable(name = "articleId") Long articleId, Model model) throws IOException {
