@@ -32,7 +32,7 @@ import java.util.stream.IntStream;
  */
 public class RedisClient {
     private static final Charset CODE = StandardCharsets.UTF_8;
-    private static final String KEY_PREFIX = "pai_";
+    private static final String KEY_PREFIX = "th_";
     private static RedisTemplate<String, String> template;
 
     public static void register(RedisTemplate<String, String> template) {
@@ -49,7 +49,7 @@ public class RedisClient {
     }
 
     /**
-     * 技术派的缓存值序列化处理
+     * TecHub的缓存值序列化处理
      *
      * @param val
      * @param <T>
@@ -65,7 +65,7 @@ public class RedisClient {
     }
 
     /**
-     * 生成技术派的缓存key
+     * 生成TecHub的缓存key
      *
      * @param key
      * @return
