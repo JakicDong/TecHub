@@ -20,9 +20,31 @@ import java.util.function.Supplier;
 
 /*
 * @author JakicDong
-* @description 异步工具类
+* @description 异步工具类 异步工厂 专门用来创建和管理异步任务
 * @time 2025/7/3 15:47
 */
+
+/**
+    1. 工厂模式架构
+AsyncUtil 是工厂，提供创建异步执行类的接口
+CompletableFutureBridge 是产品（异步执行类）
+    2. 线程相关存储
+使用 ThreadLocal 存储异步执行类实例
+每个线程都有自己的实例，保证线程安全
+    3. 链式编程记录工作
+通过返回 this 实现链式调用
+可以连续记录多个同步/异步任务
+代码像流水线一样清晰
+    4. 执行和状态记录
+记录需要执行的工作列表
+监控每个任务的执行状态和耗时
+提供性能统计和调试信息
+    5. 兜底操作
+提供超时保护机制
+优雅降级处理异常情况
+保证系统稳定性
+ */
+
 @Slf4j
 public class AsyncUtil {
     /*********************************************************************
@@ -30,7 +52,7 @@ public class AsyncUtil {
     * 线程池管理
     *
     * */
-    //线程工厂
+    //线程工厂 每个线程都有自己的桥接对象
     private static final TransmittableThreadLocal<CompletableFutureBridge> THREAD_LOCAL = new TransmittableThreadLocal<>();
     private static final ThreadFactory THREAD_FACTORY = new ThreadFactory() {
         //自定义线程工厂 并且将创建的线程设置为守护线程
@@ -49,8 +71,8 @@ public class AsyncUtil {
     };
 
     //线程池初始化
-    private static ExecutorService executorService;
-    private static SimpleTimeLimiter simpleTimeLimiter;
+    private static ExecutorService executorService; //全局线程池
+    private static SimpleTimeLimiter simpleTimeLimiter; //超时限制器
 
     static {
         //类加载时初始化线程池
