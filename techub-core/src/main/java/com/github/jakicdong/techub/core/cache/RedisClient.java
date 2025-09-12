@@ -35,11 +35,12 @@ public class RedisClient {
     private static final String KEY_PREFIX = "th_";
     private static RedisTemplate<String, String> template;
 
+    //
     public static void register(RedisTemplate<String, String> template) {
         RedisClient.template = template;
     }
 
-
+    //空值校验
     public static void nullCheck(Object... args) {
         for (Object obj : args) {
             if (obj == null) {
@@ -50,7 +51,8 @@ public class RedisClient {
 
     /**
      * TecHub的缓存值序列化处理
-     *
+     * String类型直接utf8返回字节数组 
+     * 其他类型使用JsonUtil.toStr转换成json后再utf8进行序列化
      * @param val
      * @param <T>
      * @return
@@ -75,7 +77,7 @@ public class RedisClient {
         key = KEY_PREFIX + key;
         return key.getBytes(CODE);
     }
-
+    //对多个key进行序列化
     public static byte[][] keyBytes(List<String> keys) {
         byte[][] bytes = new byte[keys.size()][];
         int index = 0;
@@ -86,13 +88,13 @@ public class RedisClient {
     }
 
     /**
-     * 返回key的有效期
+     * 返回key的有效期 Time To Live
      *
      * @param key
      * @return
      */
     public static Long ttl(String key) {
-        return template.execute((RedisCallback<Long>) con -> con.ttl(keyBytes(key)));
+        return template.execute((RedisCallback<Long>) con -> con.ttl(keyBytes(key)));//lambda 前面加一个强制类型转换
     }
 
     /**
@@ -159,13 +161,12 @@ public class RedisClient {
             }
         });
     }
-
+    //获取Hash中的所有字段和值
     public static <T> Map<String, T> hGetAll(String key, Class<T> clz) {
         Map<byte[], byte[]> records = template.execute((RedisCallback<Map<byte[], byte[]>>) con -> con.hGetAll(keyBytes(key)));
         if (records == null) {
             return Collections.emptyMap();
         }
-
         Map<String, T> result = Maps.newHashMapWithExpectedSize(records.size());
         for (Map.Entry<byte[], byte[]> entry : records.entrySet()) {
             if (entry.getKey() == null) {
@@ -176,7 +177,7 @@ public class RedisClient {
         }
         return result;
     }
-
+    //获取Hash中的一个字段和值
     public static <T> T hGet(String key, String field, Class<T> clz) {
         return template.execute((RedisCallback<T>) con -> {
             byte[] records = con.hGet(keyBytes(key), valBytes(field));
@@ -189,7 +190,7 @@ public class RedisClient {
     }
 
     /**
-     * 自增
+     * 自增 如果存在则自增，不存在则设置为0
      *
      * @param key
      * @param filed
@@ -199,7 +200,7 @@ public class RedisClient {
     public static Long hIncr(String key, String filed, Integer cnt) {
         return template.execute((RedisCallback<Long>) con -> con.hIncrBy(keyBytes(key), valBytes(filed), cnt));
     }
-
+    //删除Hash中的一个字段
     public static <T> Boolean hDel(String key, String field) {
         return template.execute(new RedisCallback<Boolean>() {
             @Override
@@ -208,7 +209,7 @@ public class RedisClient {
             }
         });
     }
-
+    //设置Hash中的一个字段和值
     public static <T> Boolean hSet(String key, String field, T ans) {
         return template.execute(new RedisCallback<Boolean>() {
             @Override
@@ -217,7 +218,7 @@ public class RedisClient {
             }
         });
     }
-
+    //设置Hash中的多个字段和值
     public static <T> void hMSet(String key, Map<String, T> fields) {
         Map<byte[], byte[]> val = Maps.newHashMapWithExpectedSize(fields.size());
         for (Map.Entry<String, T> entry : fields.entrySet()) {
@@ -228,7 +229,7 @@ public class RedisClient {
             return null;
         });
     }
-
+    //获取Hash中的多个字段和值
     public static <T> Map<String, T> hMGet(String key, final List<String> fields, Class<T> clz) {
         return template.execute(new RedisCallback<Map<String, T>>() {
             @Override
@@ -246,7 +247,7 @@ public class RedisClient {
     }
 
     /**
-     * 判断value是否再set中
+     * 判断value是否在set中
      *
      * @param key
      * @param value
@@ -355,7 +356,7 @@ public class RedisClient {
             }
         });
     }
-
+    //获取分数的排名
     public static Integer zRank(String key, String value) {
         return template.execute(new RedisCallback<Integer>() {
             @Override
@@ -372,6 +373,7 @@ public class RedisClient {
      * @param n
      * @return
      */
+    
     public static List<ImmutablePair<String, Double>> zTopNScore(String key, int n) {
         return template.execute(new RedisCallback<List<ImmutablePair<String, Double>>>() {
             @Override
@@ -420,6 +422,7 @@ public class RedisClient {
         });
     }
 
+    //获取列表中的指定范围的元素
     public static void lTrim(String key, int start, int size) {
         template.execute(new RedisCallback<Void>() {
             @Override
@@ -429,16 +432,14 @@ public class RedisClient {
             }
         });
     }
-
+    //将字节数组转换成对象
     private static <T> T toObj(byte[] ans, Class<T> clz) {
         if (ans == null) {
             return null;
         }
-
         if (clz == String.class) {
             return (T) new String(ans, CODE);
         }
-
         return JsonUtil.toObj(new String(ans, CODE), clz);
     }
 

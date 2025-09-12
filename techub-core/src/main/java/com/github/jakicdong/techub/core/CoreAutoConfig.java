@@ -1,4 +1,3 @@
-
 package com.github.jakicdong.techub.core;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
