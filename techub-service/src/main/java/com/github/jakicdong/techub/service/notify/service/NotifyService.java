@@ -10,6 +10,7 @@ import com.github.jakicdong.techub.api.model.enums.NotifyTypeEnum;
 import com.github.jakicdong.techub.api.model.vo.PageListVo;
 import com.github.jakicdong.techub.api.model.vo.PageParam;
 import com.github.jakicdong.techub.api.model.vo.notify.dto.NotifyMsgDTO;
+import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 
 import java.util.Map;
@@ -45,7 +46,13 @@ public interface NotifyService {
      */
     PageListVo<NotifyMsgDTO> queryUserNotices(Long userId, NotifyTypeEnum type, PageParam page);
 
-
+    /**
+     * 保存通知
+     *
+     * @param foot
+     * @param notifyTypeEnum
+     */
+    void saveArticleNotify(UserFootDO foot, NotifyTypeEnum notifyTypeEnum);
 
     // -------------------------------------------- 下面是与用户的websocket长连接维护相关实现 -------------------------
 

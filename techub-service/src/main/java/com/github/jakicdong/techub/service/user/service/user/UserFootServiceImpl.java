@@ -7,11 +7,17 @@ import com.github.jakicdong.techub.api.model.enums.OperateTypeEnum;
 import com.github.jakicdong.techub.api.model.vo.PageParam;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
+import com.github.jakicdong.techub.core.common.CommonConstants;
+import com.github.jakicdong.techub.core.util.JsonUtil;
 import com.github.jakicdong.techub.service.comment.repository.entity.CommentDO;
 import com.github.jakicdong.techub.service.notify.help.MsgNotifyHelper;
+import com.github.jakicdong.techub.service.notify.service.RabbitmqService;
 import com.github.jakicdong.techub.service.user.repository.dao.UserFootDao;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
 import com.github.jakicdong.techub.service.user.service.UserFootService;
+import com.rabbitmq.client.BuiltinExchangeType;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -25,14 +31,14 @@ import java.util.function.Supplier;
 * @description 用户足迹Service实现类
 * @time 2025/7/3 20:30
 */
+@Slf4j
 @Service
 public class UserFootServiceImpl implements UserFootService {
     private final UserFootDao userFootDao;
 
+    @Autowired
+    private RabbitmqService rabbitmqService;
 
-//    @Autowired
-//    private RabbitmqService rabbitmqService;
-//
     public UserFootServiceImpl(UserFootDao userFootDao){
         this.userFootDao = userFootDao;
     }
@@ -173,19 +179,19 @@ public class UserFootServiceImpl implements UserFootService {
             // 不需要发送通知的场景，直接返回
             return;
         }
-        System.out.println(notifyType);//dele
-        MsgNotifyHelper.publish(notifyType, readUserFootDO);
-        //todo mq还没添加进来
+
+//        MsgNotifyHelper.publish(notifyType, readUserFootDO);
         // 点赞消息走 RabbitMQ，其它走 Java 内置消息机制
-//        if (notifyType.equals(NotifyTypeEnum.PRAISE) && rabbitmqService.enabled()) {
-//            rabbitmqService.publishMsg(
-//                    CommonConstants.EXCHANGE_NAME_DIRECT,
-//                    BuiltinExchangeType.DIRECT,
-//                    CommonConstants.QUERE_KEY_PRAISE,
-//                    JsonUtil.toStr(readUserFootDO));
-//        } else {
-//            MsgNotifyHelper.publish(notifyType, readUserFootDO);
-//        }
+        if (notifyType.equals(NotifyTypeEnum.PRAISE) && rabbitmqService.enabled()) {
+            log.info("点赞消息走 RabbitMQ，其它走 Java 内置消息机制");
+            rabbitmqService.publishMsg(
+                    CommonConstants.EXCHANGE_NAME_DIRECT,
+                    BuiltinExchangeType.DIRECT,
+                    CommonConstants.QUERE_KEY_PRAISE,
+                    JsonUtil.toStr(readUserFootDO));
+        } else {
+            MsgNotifyHelper.publish(notifyType, readUserFootDO);
+        }
     }
 
     @Override
