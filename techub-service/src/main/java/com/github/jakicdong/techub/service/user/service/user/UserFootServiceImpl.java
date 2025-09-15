@@ -182,16 +182,16 @@ public class UserFootServiceImpl implements UserFootService {
 
 //        MsgNotifyHelper.publish(notifyType, readUserFootDO);
         // 点赞消息走 RabbitMQ，其它走 Java 内置消息机制
-        if (notifyType.equals(NotifyTypeEnum.PRAISE) && rabbitmqService.enabled()) {
-            log.info("点赞消息走 RabbitMQ，其它走 Java 内置消息机制");
-            rabbitmqService.publishMsg(
-                    CommonConstants.EXCHANGE_NAME_DIRECT,
-                    BuiltinExchangeType.DIRECT,
-                    CommonConstants.QUERE_KEY_PRAISE,
-                    JsonUtil.toStr(readUserFootDO));
-        } else {
-            MsgNotifyHelper.publish(notifyType, readUserFootDO);
-        }
+//        if (notifyType.equals(NotifyTypeEnum.PRAISE) && rabbitmqService.enabled()) {
+//            log.info("点赞消息走 RabbitMQ，其它走 Java 内置消息机制");
+//            rabbitmqService.publishMsg(
+//                    CommonConstants.EXCHANGE_NAME_DIRECT,
+//                    BuiltinExchangeType.DIRECT,
+//                    CommonConstants.QUERE_KEY_PRAISE,
+//                    JsonUtil.toStr(readUserFootDO));
+//        } else {
+//            MsgNotifyHelper.publish(notifyType, readUserFootDO);
+//        }
     }
 
     @Override

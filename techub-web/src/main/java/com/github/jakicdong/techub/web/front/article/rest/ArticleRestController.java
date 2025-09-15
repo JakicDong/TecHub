@@ -17,6 +17,7 @@ import com.github.jakicdong.techub.api.model.vo.article.dto.CategoryDTO;
 import com.github.jakicdong.techub.api.model.vo.article.dto.TagDTO;
 import com.github.jakicdong.techub.api.model.vo.constants.StatusEnum;
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
+import com.github.jakicdong.techub.core.annotation.RecordOperate;
 import com.github.jakicdong.techub.core.mdc.MdcDot;
 import com.github.jakicdong.techub.core.permission.Permission;
 import com.github.jakicdong.techub.core.permission.UserRole;
@@ -159,9 +160,11 @@ public class ArticleRestController {
      * @param type      取值来自于 OperateTypeEnum#code
      * @return
      */
+    //todo 使用kafka实现的消息通知接口
     @Permission(role = UserRole.LOGIN)
     @GetMapping(path = "favor")
     @MdcDot(bizCode = "#articleId")
+    @RecordOperate(title = "article")
     public ResVo<Boolean> favor(@RequestParam(name = "articleId") Long articleId,
                                 @RequestParam(name = "type") Integer type) throws IOException, TimeoutException {
         OperateTypeEnum operate = OperateTypeEnum.fromCode(type);
