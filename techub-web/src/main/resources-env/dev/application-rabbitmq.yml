@@ -5,4 +5,6 @@ rabbitmq:
   passport: admin
   virtualhost: /
   switchFlag: true
-  pool_size: 5
+  pool_size: 10  # 连接池大小：10个消费者 + 5个发布缓冲
+  consumerCount: 8  # 消费者数量，根据用户规模调整
+  processorThreads: 20  # 消息处理线程数，根据CPU核心数调整
