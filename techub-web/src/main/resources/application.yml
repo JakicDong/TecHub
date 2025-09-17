@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
   servlet:
     session:
       timeout: 5m # 设置session的有效期为五分钟
@@ -90,7 +90,7 @@ knife4j:
 
 logging:
   level:
-    com.github.paicoding.forum.service.rank.service.impl.*: debug # 指定具体包下的日志输出级别
+    com.github.jakicdong,techub.service.rank.service.impl.*: debug # 指定具体包下的日志输出级别
     org:
       springframework:
         web:

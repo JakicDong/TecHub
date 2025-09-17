@@ -118,4 +118,23 @@ public interface ArticleReadService {
      * @return
      */
     String generateSummary(String content);
+
+    /**
+     * 根据查询条件查询文章列表，支持翻页
+     *
+     * @param key
+     * @param page
+     * @return
+     */
+    PageListVo<ArticleDTO> queryArticlesBySearchKey(String key, PageParam page);
+
+    /**
+     * 根据关键词匹配标题，查询用于推荐的文章列表，只返回 articleId + title
+     *
+     * @param key
+     * @return
+     */
+    List<SimpleArticleDTO> querySimpleArticleBySearchKey(String key);
+
+
 }

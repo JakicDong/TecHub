@@ -10,24 +10,41 @@ import com.github.jakicdong.techub.api.model.vo.article.dto.SimpleArticleDTO;
 import com.github.jakicdong.techub.api.model.vo.constants.StatusEnum;
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
 import com.github.jakicdong.techub.core.util.ArticleUtil;
+import com.github.jakicdong.techub.core.util.SpringUtil;
 import com.github.jakicdong.techub.service.article.conveter.ArticleConverter;
 import com.github.jakicdong.techub.service.article.repository.dao.ArticleDao;
 import com.github.jakicdong.techub.service.article.repository.dao.ArticleTagDao;
 import com.github.jakicdong.techub.service.article.repository.entity.ArticleDO;
 import com.github.jakicdong.techub.service.article.service.ArticleReadService;
 import com.github.jakicdong.techub.service.article.service.CategoryService;
+import com.github.jakicdong.techub.service.constant.EsFieldConstant;
+import com.github.jakicdong.techub.service.constant.EsIndexConstant;
 import com.github.jakicdong.techub.service.statistics.service.CountService;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
 import com.github.jakicdong.techub.service.user.service.UserFootService;
 import com.github.jakicdong.techub.service.user.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ArticleReadServiceImpl implements ArticleReadService {
     @Autowired
@@ -235,6 +252,75 @@ public class ArticleReadServiceImpl implements ArticleReadService {
     @Override
     public String generateSummary(String content) {
         return ArticleUtil.pickSummary(content);
+    }
+
+    @Override
+    public PageListVo<ArticleDTO> queryArticlesBySearchKey(String key, PageParam page) {
+        List<ArticleDO> records = articleDao.listArticlesByBySearchKey(key, page);
+        return buildArticleListVo(records, page.getPageSize());
+    }
+
+    @Override
+    public List<SimpleArticleDTO> querySimpleArticleBySearchKey(String key) {
+        // todo 当key为空时，返回热门推荐
+        if (StringUtils.isBlank(key)) {
+            return Collections.emptyList();
+        }
+        key = key.trim();
+        if (!openES) {
+            List<ArticleDO> records = articleDao.listSimpleArticlesByBySearchKey(key);
+            log.info("通过数据库查询文章列表，key: {}", key);
+            return records.stream().map(s -> new SimpleArticleDTO().setId(s.getId()).setTitle(s.getTitle()))
+                    .collect(Collectors.toList());
+        }
+        // 使用Elasticsearch进行全文搜索
+        log.info("通过ES查询文章列表，key: {}", key);
+        
+        // 构建ES搜索源构建器
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        
+        // 创建多字段匹配查询，在标题和短标题字段中搜索关键词
+        MultiMatchQueryBuilder multiMatchQueryBuilder = QueryBuilders.multiMatchQuery(key,
+                EsFieldConstant.ES_FIELD_TITLE,        // 文章标题字段
+                EsFieldConstant.ES_FIELD_SHORT_TITLE); // 文章短标题字段
+        
+        // 将查询条件设置到搜索源构建器中
+        searchSourceBuilder.query(multiMatchQueryBuilder);
+
+        // 创建搜索请求，指定搜索的索引为文章索引
+        SearchRequest searchRequest = new SearchRequest(new String[]{EsIndexConstant.ES_INDEX_ARTICLE},
+                searchSourceBuilder);
+        
+        SearchResponse searchResponse = null;
+        try {
+            // 执行ES搜索请求
+            searchResponse = SpringUtil.getBean(RestHighLevelClient.class).search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            log.error("failed to query from es: key", e);
+        }
+        
+        // 获取搜索结果
+        SearchHits hits = searchResponse.getHits();
+        SearchHit[] hitsList = hits.getHits();
+        
+        // 提取搜索结果中的文章ID列表
+        List<Integer> ids = new ArrayList<>();
+        for (SearchHit documentFields : hitsList) {
+            // 将ES文档ID转换为整数类型的文章ID
+            ids.add(Integer.parseInt(documentFields.getId()));
+        }
+        
+        // 如果没有搜索到结果，返回null
+        if (ObjectUtils.isEmpty(ids)) {
+            return null;
+        }
+        
+        // 根据文章ID列表从数据库查询完整的文章信息
+        List<ArticleDO> records = articleDao.selectByIds(ids);
+        
+        // 将文章DO对象转换为SimpleArticleDTO对象并返回
+        return records.stream().map(s -> new SimpleArticleDTO().setId(s.getId()).setTitle(s.getTitle()))
+                .collect(Collectors.toList());
     }
 
 }

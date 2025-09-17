@@ -32,7 +32,11 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-
+/*
+* @author JakicDong
+* @description 首页推荐相关
+* @time 2025/9/17 11:00
+*/
 @Component
 public class IndexRecommendHelper {
     @Autowired
@@ -158,6 +162,13 @@ public class IndexRecommendHelper {
             return userService.queryUserInfoWithStatistic(ReqInfoContext.getReqInfo().getUserId());
         }
         return null;
+    }
+
+    public IndexVo buildSearchVo(String key) {
+        IndexVo vo = new IndexVo();
+        vo.setArticles(articleService.queryArticlesBySearchKey(key, PageParam.newPageInstance()));
+        vo.setSideBarItems(sidebarService.queryHomeSidebarList());
+        return vo;
     }
 
 }
