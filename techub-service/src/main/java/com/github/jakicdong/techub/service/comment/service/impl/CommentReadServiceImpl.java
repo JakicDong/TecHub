@@ -19,6 +19,7 @@ import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
 import com.github.jakicdong.techub.service.user.service.UserFootService;
 import com.github.jakicdong.techub.service.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -34,6 +35,7 @@ public class CommentReadServiceImpl implements CommentReadService {
     private UserService userService;
 
     @Autowired
+    @Lazy
     private CountService countService;
 
     @Autowired

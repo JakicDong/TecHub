@@ -2,6 +2,7 @@ package com.github.jakicdong.techub.service.user.repository.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.jakicdong.techub.api.model.vo.PageParam;
+import com.github.jakicdong.techub.api.model.vo.user.dto.ArticleFootCountDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.jakicdong.techub.api.model.vo.user.dto.UserFootStatisticDTO;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
@@ -18,8 +19,48 @@ import java.util.List;
 public interface UserFootMapper extends BaseMapper<UserFootDO> {
 
 
+    /**
+     * 查询文章计数信息
+     *
+     * @param articleId
+     * @return
+     */
+    ArticleFootCountDTO countArticleByArticleId(@Param("articleId") Long articleId);
 
-    UserFootStatisticDTO getFootCount();
+    /**
+     * 查询作者的文章统计
+     *
+     * @param author
+     * @return
+     */
+    ArticleFootCountDTO countArticleByUserId(@Param("userId") Long author);
+
+    /**
+     * 查询作者的所有文章阅读计数
+     *
+     * @param author
+     * @return
+     */
+    Integer countArticleReadsByUserId(@Param("userId") Long author);
+
+    /**
+     * 查询用户收藏的文章列表
+     *
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    List<Long> listCollectedArticlesByUserId(@Param("userId") Long userId, @Param("pageParam") PageParam pageParam);
+
+
+    /**
+     * 查询用户阅读的文章列表
+     *
+     * @param userId
+     * @param pageParam
+     * @return
+     */
+    List<Long> listReadArticleByUserId(@Param("userId") Long userId, @Param("pageParam") PageParam pageParam);
 
     /**
      * 查询文章的点赞列表
@@ -34,22 +75,5 @@ public interface UserFootMapper extends BaseMapper<UserFootDO> {
                                                            @Param("size") int size);
 
 
-    /**
-     * 查询用户阅读的文章列表
-     *
-     * @param userId
-     * @param pageParam
-     * @return
-     */
-    List<Long> listReadArticleByUserId(@Param("userId") Long userId, @Param("pageParam") PageParam pageParam);
-
-    /**
-     * 查询用户收藏的文章列表
-     *
-     * @param userId
-     * @param pageParam
-     * @return
-     */
-    List<Long> listCollectedArticlesByUserId(@Param("userId") Long userId, @Param("pageParam") PageParam pageParam);
-
+    UserFootStatisticDTO getFootCount();
 }

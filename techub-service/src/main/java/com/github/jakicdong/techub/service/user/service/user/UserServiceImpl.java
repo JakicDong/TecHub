@@ -23,6 +23,7 @@ import com.github.jakicdong.techub.service.user.service.help.UserPwdEncoder;
 import com.github.jakicdong.techub.service.user.service.help.UserSessionHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -47,6 +48,7 @@ public class UserServiceImpl implements UserService {
     private UserRelationDao userRelationDao;
 
     @Autowired
+    @Lazy
     private CountService countService;
 
     @Autowired
