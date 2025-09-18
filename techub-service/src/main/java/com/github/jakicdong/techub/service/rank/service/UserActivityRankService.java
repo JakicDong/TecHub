@@ -25,6 +25,15 @@ public interface UserActivityRankService {
     void addActivityScore(Long userId, ActivityScoreBo activityScore);
 
     /**
+     * 查询用户的活跃信息
+     *
+     * @param userId
+     * @param time
+     * @return
+     */
+    RankItemDTO queryRankInfo(Long userId, ActivityRankTimeEnum time);
+
+    /**
      * 查询活跃度排行榜
      *
      * @param time

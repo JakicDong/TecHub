@@ -7,11 +7,12 @@ import lombok.experimental.Accessors;
 /*
 * @author JakicDong
 * @description 排行榜信息
-* @time 2025/7/3 18:43
+* @time 2025/9/18 16:53
 */
 @Data
 @Accessors(chain = true)
 public class RankItemDTO {
+
     /**
      * 排名
      */

@@ -172,4 +172,16 @@ public class UserActivityRankServiceImpl implements UserActivityRankService {
         }
     }
 
+    @Override
+    public RankItemDTO queryRankInfo(Long userId, ActivityRankTimeEnum time) {
+        RankItemDTO item = new RankItemDTO();
+        item.setUser(userService.querySimpleUserInfo(userId));
+
+        String rankKey = time == ActivityRankTimeEnum.DAY ? todayRankKey() : monthRankKey();
+        ImmutablePair<Integer, Double> rank = RedisClient.zRankInfo(rankKey, String.valueOf(userId));
+        item.setRank(rank.getLeft());
+        item.setScore(rank.getRight().intValue());
+        return item;
+    }
+
 }
