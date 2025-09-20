@@ -14,6 +14,7 @@ import com.github.jakicdong.techub.service.user.service.UserService;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -32,6 +33,7 @@ public class HaterBot {
     private ChatFacade chatFacade;
 
     @Autowired
+    @Lazy
     private UserService userService;
 
     @Autowired

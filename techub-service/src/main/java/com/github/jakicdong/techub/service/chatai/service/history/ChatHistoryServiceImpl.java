@@ -10,6 +10,7 @@ import com.github.jakicdong.techub.service.chatai.service.ChatHistoryService;
 import com.github.jakicdong.techub.service.user.service.UserAiService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,8 +26,10 @@ import java.util.Objects;
 @Service
 public class ChatHistoryServiceImpl implements ChatHistoryService {
     @Autowired
+    @Lazy
     private UserAiService userAiService;
     @Autowired
+    @Lazy
     private AiBots aiBots;
 
     /**

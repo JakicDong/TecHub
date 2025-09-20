@@ -41,13 +41,17 @@ public class SensitiveService {
         dynamicConfigContainer.registerRefreshCallback(sensitiveConfig, this::refresh);
         IWordDeny deny = () -> {
             List<String> sub = WordDenySystem.getInstance().deny();
-            sub.addAll(sensitiveConfig.getDeny());
+            if (sensitiveConfig.getDeny() != null) {
+                sub.addAll(sensitiveConfig.getDeny());
+            }
             return sub;
         };
 
         IWordAllow allow = () -> {
             List<String> sub = WordAllowSystem.getInstance().allow();
-            sub.addAll(sensitiveConfig.getAllow());
+            if (sensitiveConfig.getAllow() != null) {
+                sub.addAll(sensitiveConfig.getAllow());
+            }
             return sub;
         };
         sensitiveWordBs = SensitiveWordBs.newInstance()
