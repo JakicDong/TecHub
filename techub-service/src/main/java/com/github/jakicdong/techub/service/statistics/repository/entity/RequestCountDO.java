@@ -1,4 +1,4 @@
-package com.github.jakicdong.techub.service.statistics.repository.entitu;
+package com.github.jakicdong.techub.service.statistics.repository.entity;
 
 /*
 * @author JakicDong
@@ -10,7 +10,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.jakicdong.techub.api.model.entity.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 import java.util.Date;
 

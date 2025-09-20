@@ -14,7 +14,7 @@ import com.github.jakicdong.techub.service.comment.converter.CommentConverter;
 import com.github.jakicdong.techub.service.comment.repository.dao.CommentDao;
 import com.github.jakicdong.techub.service.comment.repository.entity.CommentDO;
 import com.github.jakicdong.techub.service.comment.service.CommentWriteService;
-import com.github.jakicdong.techub.service.user.service.UserFootService;
+import com.github.jakicdong.techub.service.user.service.userfoot.UserFootService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

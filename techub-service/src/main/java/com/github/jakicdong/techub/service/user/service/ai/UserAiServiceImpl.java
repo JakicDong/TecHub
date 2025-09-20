@@ -1,23 +1,105 @@
 package com.github.jakicdong.techub.service.user.service.ai;
 
 import com.github.jakicdong.techub.api.model.context.ReqInfoContext;
+import com.github.jakicdong.techub.api.model.enums.ai.AISourceEnum;
 import com.github.jakicdong.techub.api.model.enums.user.UserAIStatEnum;
+import com.github.jakicdong.techub.api.model.enums.user.UserAiStrategyEnum;
+import com.github.jakicdong.techub.api.model.vo.chat.ChatItemVo;
 import com.github.jakicdong.techub.api.model.vo.user.UserPwdLoginReq;
+import com.github.jakicdong.techub.service.chatai.bot.AiBots;
 import com.github.jakicdong.techub.service.user.converter.UserAiConverter;
 import com.github.jakicdong.techub.service.user.repository.dao.UserAiDao;
+import com.github.jakicdong.techub.service.user.repository.dao.UserAiHistoryDao;
 import com.github.jakicdong.techub.service.user.repository.entity.UserAiDO;
+import com.github.jakicdong.techub.service.user.repository.entity.UserAiHistoryDO;
 import com.github.jakicdong.techub.service.user.service.UserAiService;
+import com.github.jakicdong.techub.service.user.service.conf.AiConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 
+/*
+* @author JakicDong
+* @description 用户AI服务
+* @time 2025/9/20 20:29
+*/
 @Service
 public class UserAiServiceImpl implements UserAiService {
+    @Resource
+    private UserAiHistoryDao userAiHistoryDao;
 
-    @Autowired
+    @Resource
     private UserAiDao userAiDao;
+
+    @Resource
+    private AiConfig aiConfig;
+
+    @Resource
+    private AiBots aiBots;
+
+    @Override
+    public void pushChatItem(AISourceEnum source, Long user, ChatItemVo item) {
+        UserAiHistoryDO userAiHistoryDO = new UserAiHistoryDO();
+        userAiHistoryDO.setAiType(source.getCode());
+        userAiHistoryDO.setUserId(user);
+        userAiHistoryDO.setQuestion(item.getQuestion());
+        userAiHistoryDO.setAnswer(item.getAnswer());
+        userAiHistoryDO.setChatId(ReqInfoContext.getReqInfo().getChatId());
+        userAiHistoryDao.save(userAiHistoryDO);
+    }
+
+    /**
+     * 获取用户的最大使用次数
+     *
+     * @param userId
+     * @return
+     */
+    public int getMaxChatCnt(Long userId) {
+        // 对于系统AI机器人，不进行次数限制
+        if (aiBots.aiBots(userId)) {
+            return Integer.MAX_VALUE;
+        }
+
+        UserAiDO ai = userAiDao.getOrInitAiInfo(userId);
+        int strategy = ai.getStrategy();
+        int cnt = 0;
+
+        // 星球用户 +100
+        if (UserAiStrategyEnum.STAR_JAVA_GUIDE.match(strategy) || UserAiStrategyEnum.STAR_TECH_PAI.match(strategy)) {
+            if (Objects.equals(ai.getState(), UserAIStatEnum.FORMAL.getCode())) {
+                // 审核通过
+                cnt += aiConfig.getMaxNum().getStar();
+            } else if (Objects.equals(ai.getState(), UserAIStatEnum.TRYING.getCode())) {
+                // 试用中
+                cnt += aiConfig.getMaxNum().getStarTry();
+            }
+        } else {
+            // 有星球走星球，无星球再走公众号
+            // 微信公众号登录用户 +5次
+            if (UserAiStrategyEnum.WECHAT.match(strategy)) {
+                cnt += aiConfig.getMaxNum().getWechat();
+            }
+        }
+
+        // 推荐机制，如果绑定了邀请码，则总次数 + 10%
+        if (UserAiStrategyEnum.INVITE_USER.match(strategy)) {
+            cnt = (int) (cnt + cnt * aiConfig.getMaxNum().getInvited());
+        }
+
+        // 根据推荐的人数，来进行增加
+        if (ai.getInviteNum() > 0) {
+            cnt = cnt + ai.getInviteNum() * ((int) (cnt * aiConfig.getMaxNum().getInviteNum()));
+        }
+
+        if (cnt == 0) {
+            // 对于登录用户，给五次使用机会
+            cnt = aiConfig.getMaxNum().getBasic();
+        }
+        return cnt;
+    }
 
     @Override
     public void initOrUpdateAiInfo(UserPwdLoginReq loginReq) {

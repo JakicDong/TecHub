@@ -16,7 +16,7 @@ import com.github.jakicdong.techub.service.comment.repository.entity.CommentDO;
 import com.github.jakicdong.techub.service.comment.service.CommentReadService;
 import com.github.jakicdong.techub.service.statistics.service.CountService;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
-import com.github.jakicdong.techub.service.user.service.UserFootService;
+import com.github.jakicdong.techub.service.user.service.userfoot.UserFootService;
 import com.github.jakicdong.techub.service.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;

@@ -23,7 +23,7 @@ import com.github.jakicdong.techub.core.permission.UserRole;
 import com.github.jakicdong.techub.core.util.MarkdownConverter;
 import com.github.jakicdong.techub.service.article.repository.entity.ArticleDO;
 import com.github.jakicdong.techub.service.article.service.*;
-import com.github.jakicdong.techub.service.user.service.UserFootService;
+import com.github.jakicdong.techub.service.user.service.userfoot.UserFootService;
 import com.github.jakicdong.techub.service.user.service.UserService;
 import com.github.jakicdong.techub.web.component.TemplateEngineHelper;
 import com.github.jakicdong.techub.web.front.article.vo.ArticleDetailVo;

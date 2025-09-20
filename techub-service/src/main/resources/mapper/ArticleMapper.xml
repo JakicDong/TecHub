@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.jakicdong.techub.service.article.repository.mapper.ArticleMapper">
 
-
     <sql id="limit">
         <if test="pageParam != null">
             limit #{pageParam.offset}, #{pageParam.limit}
@@ -12,8 +11,8 @@
     <select id="listArticlesOrderById" resultType="com.github.jakicdong.techub.api.model.vo.article.dto.SimpleArticleDTO">
         select id, title, update_time as createTime from article
         where id > #{lastId}
-          and status =${@com.github.jakicdong.techub.api.model.enums.PushStatusEnum@ONLINE.code}
-          and deleted = ${@com.github.jakicdong.techub.api.model.enums.YesOrNoEnum@NO.code}
+        and status =${@com.github.jakicdong.techub.api.model.enums.PushStatusEnum@ONLINE.code}
+        and deleted = ${@com.github.jakicdong.techub.api.model.enums.YesOrNoEnum@NO.code}
         order by id asc limit #{size}
     </select>
 
@@ -91,9 +90,9 @@
     <select id="listArticlesByParams"
             resultType="com.github.jakicdong.techub.api.model.vo.article.dto.ArticleAdminDTO">
         select a.id as article_id, a.title, a.short_title, a.offical_stat,
-        a.topping_stat, a.status, a.cream_stat, a.picture as cover,
-        a.update_time,
-        u.user_id as author, u.user_name as author_name,u.photo as author_avatar
+               a.topping_stat, a.status, a.cream_stat, a.picture as cover,
+               a.update_time,
+               u.user_id as author, u.user_name as author_name,u.photo as author_avatar
         from article a
         left join user_info u on a.user_id = u.user_id
         <include refid="articlesByParams"/>

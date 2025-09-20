@@ -7,30 +7,32 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.jakicdong.techub.api.model.enums.YesOrNoEnum;
 import com.github.jakicdong.techub.api.model.enums.user.StarSourceEnum;
+import com.github.jakicdong.techub.api.model.vo.PageParam;
+import com.github.jakicdong.techub.api.model.vo.user.dto.ZsxqUserInfoDTO;
+import com.github.jakicdong.techub.service.user.converter.UserAiConverter;
 import com.github.jakicdong.techub.service.user.repository.entity.UserAiDO;
 import com.github.jakicdong.techub.service.user.repository.entity.UserDO;
 import com.github.jakicdong.techub.service.user.repository.mapper.UserAiMapper;
+import com.github.jakicdong.techub.service.user.repository.params.SearchZsxqWhiteParams;
 import org.springframework.stereotype.Repository;
 import com.github.jakicdong.techub.api.model.enums.user.UserAiStrategyEnum;
 
 import javax.annotation.Resource;
+import java.util.List;
 
+/*
+* @author JakicDong
+* @description 用户 AI 服务接口
+* @time 2025/9/20 20:24
+*/
 @Repository
 public class UserAiDao extends ServiceImpl<UserAiMapper, UserAiDO> {
+
     @Resource
     private UserAiMapper userAiMapper;
 
     @Resource
     private UserDao userDao;
-
-    public UserAiDO getByUserId(Long userId) {
-
-        LambdaQueryWrapper<UserAiDO> queryUserAi = Wrappers.lambdaQuery();
-
-        queryUserAi.eq(UserAiDO::getUserId, userId)
-                .eq(UserAiDO::getDeleted, YesOrNoEnum.NO.getCode());
-        return userAiMapper.selectOne(queryUserAi);
-    }
 
     /**
      * 根据星球编号反查用户
@@ -47,6 +49,32 @@ public class UserAiDao extends ServiceImpl<UserAiMapper, UserAiDO> {
         return userAiMapper.selectOne(queryUserAi);
     }
 
+    public UserAiDO getByUserId(Long userId) {
+        LambdaQueryWrapper<UserAiDO> queryUserAi = Wrappers.lambdaQuery();
+
+        queryUserAi.eq(UserAiDO::getUserId, userId)
+                .eq(UserAiDO::getDeleted, YesOrNoEnum.NO.getCode());
+        return userAiMapper.selectOne(queryUserAi);
+    }
+
+
+    /**
+     * 查询用户的ai信息，若不存在，则初始化一个，主要用于存量的账号已存在的场景
+     *
+     * @param userId
+     */
+    public UserAiDO getOrInitAiInfo(Long userId) {
+        UserAiDO ai = getByUserId(userId);
+        if (ai != null) {
+            return ai;
+        }
+
+        // 当不存在时，初始化一个
+        ai = UserAiConverter.initAi(userId);
+        saveOrUpdateAiBindInfo(ai, null);
+        return ai;
+    }
+
     /**
      * 根据邀请码，查找对应的邀请人
      *
@@ -61,8 +89,28 @@ public class UserAiDao extends ServiceImpl<UserAiMapper, UserAiDO> {
         return userAiMapper.selectOne(queryUserAi);
     }
 
+    /**
+     * 更新用户的邀请人数
+     *
+     * @param id
+     * @param incr
+     */
+    private void updateInviteCnt(Long id, int incr) {
+        LambdaUpdateWrapper<UserAiDO> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(UserAiDO::getId, id).setSql("invite_num = invite_num + " + incr);
+        userAiMapper.update(null, updateWrapper);
+    }
 
-    //更新userAi绑定信息
+    public void saveOrUpdateAiBindInfo(UserAiDO ai) {
+        saveOrUpdateAiBindInfo(ai, null);
+    }
+
+    /**
+     * 更新userAi绑定信息
+     *
+     * @param ai
+     * @param inviteCode
+     */
     public void saveOrUpdateAiBindInfo(UserAiDO ai, String inviteCode) {
         int strategy = ai.getStrategy();
         if (StringUtils.isNotBlank(inviteCode)) {
@@ -100,16 +148,19 @@ public class UserAiDao extends ServiceImpl<UserAiMapper, UserAiDO> {
         this.saveOrUpdate(ai);
     }
 
-    /**
-     * 更新用户的邀请人数
-     *
-     * @param id
-     * @param incr
-     */
-    private void updateInviteCnt(Long id, int incr) {
-        LambdaUpdateWrapper<UserAiDO> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.eq(UserAiDO::getId, id).setSql("invite_num = invite_num + " + incr);
-        userAiMapper.update(null, updateWrapper);
+    public List<ZsxqUserInfoDTO> listZsxqUsersByParams(SearchZsxqWhiteParams params) {
+        return userAiMapper.listZsxqUsersByParams(params,
+                PageParam.newPageInstance(params.getPageNum(), params.getPageSize()));
     }
 
+    public Long countZsxqUserByParams(SearchZsxqWhiteParams params) {
+        return userAiMapper.countZsxqUsersByParams(params);
+    }
+
+    public void batchUpdateState(List<Long> ids, Integer code) {
+        LambdaUpdateWrapper<UserAiDO> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.in(UserAiDO::getId, ids).set(UserAiDO::getState, code);
+        userAiMapper.update(null, updateWrapper);
+    }
 }
+

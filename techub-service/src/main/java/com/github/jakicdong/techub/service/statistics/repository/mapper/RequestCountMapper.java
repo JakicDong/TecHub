@@ -2,9 +2,13 @@ package com.github.jakicdong.techub.service.statistics.repository.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.github.jakicdong.techub.service.statistics.repository.entitu.RequestCountDO;
+import com.github.jakicdong.techub.api.model.vo.statistics.dto.StatisticsDayDTO;
+import com.github.jakicdong.techub.service.statistics.repository.entity.RequestCountDO;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 /*
 * @author JakicDong
@@ -14,7 +18,6 @@ import org.apache.ibatis.annotations.Update;
 
 public interface RequestCountMapper extends BaseMapper<RequestCountDO> {
 
-
     /**
      * 获取 PV 总数
      *
@@ -23,6 +26,12 @@ public interface RequestCountMapper extends BaseMapper<RequestCountDO> {
     @Select("select sum(cnt) from request_count")
     Long getPvTotalCount();
 
+    /**
+     * 获取 PV UV 数据列表
+     * @param day
+     * @return
+     */
+    List<StatisticsDayDTO> getPvUvDayList(@Param("day") Integer day);
 
     /**
      * 增加计数
@@ -31,6 +40,4 @@ public interface RequestCountMapper extends BaseMapper<RequestCountDO> {
      */
     @Update("update request_count set cnt = cnt + 1 where id = #{id}")
     void incrementCount(Long id);
-
-
 }

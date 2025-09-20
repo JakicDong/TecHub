@@ -6,11 +6,21 @@ package com.github.jakicdong.techub.service.user.service;
 * @time 2025/7/9 14:48
 */
 
+
 import com.github.jakicdong.techub.api.model.vo.user.UserPwdLoginReq;
 
 public interface RegisterService {
 
 
+    /**
+     * 注册系统用户
+     *
+     * @param loginUser
+     * @param nickUser
+     * @param avatar
+     * @return
+     */
+    Long registerSystemUser(String loginUser, String nickUser, String avatar);
 
     /**
      * 通过用户名/密码进行注册

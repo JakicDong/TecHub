@@ -1,7 +1,7 @@
 package com.github.jakicdong.techub.service.statistics.service.Impl;
 
 import com.github.jakicdong.techub.service.statistics.repository.dao.RequestCountDao;
-import com.github.jakicdong.techub.service.statistics.repository.entitu.RequestCountDO;
+import com.github.jakicdong.techub.service.statistics.repository.entity.RequestCountDO;
 import com.github.jakicdong.techub.service.statistics.service.RequestCountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

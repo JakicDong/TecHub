@@ -1,6 +1,6 @@
 package com.github.jakicdong.techub.service.statistics.service;
 
-import com.github.jakicdong.techub.service.statistics.repository.entitu.RequestCountDO;
+import com.github.jakicdong.techub.service.statistics.repository.entity.RequestCountDO;
 
 /*
 * @author JakicDong

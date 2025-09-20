@@ -21,7 +21,7 @@ import com.github.jakicdong.techub.service.constant.EsFieldConstant;
 import com.github.jakicdong.techub.service.constant.EsIndexConstant;
 import com.github.jakicdong.techub.service.statistics.service.CountService;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
-import com.github.jakicdong.techub.service.user.service.UserFootService;
+import com.github.jakicdong.techub.service.user.service.userfoot.UserFootService;
 import com.github.jakicdong.techub.service.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;

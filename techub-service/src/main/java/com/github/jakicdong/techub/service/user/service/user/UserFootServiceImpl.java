@@ -14,7 +14,7 @@ import com.github.jakicdong.techub.service.notify.help.MsgNotifyHelper;
 import com.github.jakicdong.techub.service.notify.service.RabbitmqService;
 import com.github.jakicdong.techub.service.user.repository.dao.UserFootDao;
 import com.github.jakicdong.techub.service.user.repository.entity.UserFootDO;
-import com.github.jakicdong.techub.service.user.service.UserFootService;
+import com.github.jakicdong.techub.service.user.service.userfoot.UserFootService;
 import com.rabbitmq.client.BuiltinExchangeType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

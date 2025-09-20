@@ -7,7 +7,7 @@ package com.github.jakicdong.techub.service.statistics.repository.dao;
 */
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.github.jakicdong.techub.service.statistics.repository.entitu.RequestCountDO;
+import com.github.jakicdong.techub.service.statistics.repository.entity.RequestCountDO;
 import com.github.jakicdong.techub.service.statistics.repository.mapper.RequestCountMapper;
 import org.springframework.stereotype.Repository;
 

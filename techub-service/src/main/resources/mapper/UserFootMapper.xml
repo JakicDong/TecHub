@@ -3,7 +3,6 @@
 <mapper namespace="com.github.jakicdong.techub.service.user.repository.mapper.UserFootMapper">
 
 
-
     <!-- 注意文章的阅读计数不能使用SUM，因为read_count表中记录的已经是总数了   -->
     <select id="countArticleByArticleId"
             resultType="com.github.jakicdong.techub.api.model.vo.user.dto.ArticleFootCountDTO">
@@ -15,7 +14,7 @@
             read_count as r left join user_foot as f  on f.document_id = r.document_id and f.document_type = r.document_type
         WHERE
             r.document_type = ${@com.github.jakicdong.techub.api.model.enums.DocumentTypeEnum@ARTICLE.code}
-          AND r.document_id = #{articleId}
+            AND r.document_id = #{articleId}
 
     </select>
 
@@ -29,7 +28,7 @@
             user_foot as f
         WHERE
             f.document_type = ${@com.github.jakicdong.techub.api.model.enums.DocumentTypeEnum@ARTICLE.code}
-          AND f.document_user_id = #{userId}
+            AND f.document_user_id = #{userId}
 
     </select>
 
@@ -37,7 +36,7 @@
         SELECT
             sum(r.`cnt`) as readCount
         FROM
-            article a left join read_count as r on a.id = r.document_id
+           article a left join read_count as r on a.id = r.document_id
         WHERE
             r.document_type = ${@com.github.jakicdong.techub.api.model.enums.DocumentTypeEnum@ARTICLE.code}
           AND a.user_id = #{userId}
@@ -46,10 +45,10 @@
 
     <select id="listCollectedArticlesByUserId" resultType="java.lang.Long">
         SELECT
-        `document_id`
+           `document_id`
         FROM user_foot
         WHERE
-        user_id = #{userId} and document_type = 1 and collection_stat = 1 order by update_time desc
+            user_id = #{userId} and document_type = 1 and collection_stat = 1 order by update_time desc
         <if test="pageParam != null">
             limit #{pageParam.offset}, #{pageParam.limit}
         </if>
@@ -58,10 +57,10 @@
 
     <select id="listReadArticleByUserId" resultType="java.lang.Long">
         SELECT
-        `document_id`
+            `document_id`
         FROM user_foot
         WHERE
-        user_id = #{userId} and document_type = 1 and read_stat = 1 order by update_time desc
+            user_id = #{userId} and document_type = 1 and read_stat = 1 order by update_time desc
         <if test="pageParam != null">
             limit #{pageParam.offset}, #{pageParam.limit}
         </if>

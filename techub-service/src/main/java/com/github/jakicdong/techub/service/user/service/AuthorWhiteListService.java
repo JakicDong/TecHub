@@ -4,8 +4,12 @@ import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
 
 import java.util.List;
 
+/*
+* @author JakicDong
+* @description 作者白名单服务接口
+* @time 2025/9/20 20:23
+*/
 public interface AuthorWhiteListService {
-
 
     /**
      * 判断作者是否再文章发布的白名单中；
@@ -36,4 +40,5 @@ public interface AuthorWhiteListService {
      * @param userId
      */
     void removeAuthorFromArticleWhiteList(Long userId);
+
 }

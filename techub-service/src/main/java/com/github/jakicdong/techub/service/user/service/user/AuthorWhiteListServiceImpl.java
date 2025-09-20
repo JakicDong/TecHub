@@ -7,7 +7,7 @@ package com.github.jakicdong.techub.service.user.service.user;
 */
 
 import com.github.jakicdong.techub.api.model.vo.user.dto.BaseUserInfoDTO;
-import com.github.jakicdong.techub.service.user.service.AuthorWhiteListService;
+import com.github.jakicdong.techub.service.user.service.whitelist.AuthorWhiteListService;
 import com.github.jakicdong.techub.service.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
